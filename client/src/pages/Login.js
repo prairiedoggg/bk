@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import AuthContainer from "../components/login/AuthContainer";
+import AuthContainer from "../components/auth/AuthContainer";
 import InvisibleIcon from "../assets/icons/InvisibleIcon.svg";
 import VisibleIcon from "../assets/icons/VisibleIcon.svg";
 
@@ -66,10 +66,10 @@ const Label = styled.p`
 
 const Input = styled.input`
   width: 22rem;
-  height: 2rem;
+  height: 2.1rem;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
-  padding: 8px 12px 8px 12px;
+  padding: 5px 12px 5px 12px;
   margin-bottom: 15px;
 
   &::placeholder {
