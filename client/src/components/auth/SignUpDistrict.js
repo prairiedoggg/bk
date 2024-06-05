@@ -52,17 +52,17 @@ const DropdownBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 10rem;
+  width: 9.5rem;
   height: 1.5rem;
   color: #191619;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
-  padding: 8px 5px 8px 12px;
+  padding: 8px 5px 8px 20px;
   border: 1px solid #d0d0d0;
   cursor: pointer;
 
   img {
-    margin: 0px 0px 2px 15px;
+    margin: 0px 0px 1px 15px;
   }
 `;
 

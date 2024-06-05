@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import AuthContainer from "../components/auth/AuthContainer";
 import InvisibleIcon from "../assets/icons/InvisibleIcon.svg";
@@ -12,6 +13,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -46,7 +48,7 @@ const Login = () => {
         <Divider>|</Divider>
         <TextButton>비밀번호 찾기</TextButton>
         <Divider>|</Divider>
-        <TextButton>회원가입</TextButton>
+        <TextButton onClick={() => navigate("/signup")}>회원가입</TextButton>
       </ButtonContainer>
     </>
   );
