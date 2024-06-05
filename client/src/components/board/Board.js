@@ -4,6 +4,14 @@ import Modal from 'react-modal';
 import { ReactComponent as UserIcon } from '../../assets/icons/usericon.svg';
 import { ReactComponent as CloseIcon } from '../../assets/icons/closebutton.svg';
 import { ReactComponent as WriteIcon } from '../../assets/icons/writebutton.svg';
+import { ReactComponent as PicAddIcon } from '../../assets/icons/picaddbutton.svg';
+
+const HrLine = styled.hr`
+  border: none;
+  border-top: 0.5px solid #ddd;
+  padding-bottom: 1.25rem;
+  margin: 0;
+`;
 
 const BoardContainer = styled.div`
   width: 100%;
@@ -195,6 +203,30 @@ const CommentContent = styled.div`
   flex: 1;
 `;
 
+const TitleInput = styled.input.attrs({ type: 'text' })`
+  width: 100%;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  border-radius: 0.325rem;
+  border: none; 
+  box-sizing: border-box;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+`;
+
+
+const ContentInput = styled.input.attrs({ type: 'text' })`
+  width: 100%;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  border-radius: 0.325rem;
+  border: 0.5px solid #ddd;
+  box-sizing: border-box;
+  height: 20rem;
+`;
+
+
 const customModalStyles = {
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
@@ -259,9 +291,13 @@ const Board = () => {
     setModalIsOpen(true);
   };
 
+  const handlePicAddIconClick = () => {
+    return null;
+  }
+
   return (
     <BoardContainer>
-      <hr />
+      <HrLine />
       <BoardTagsContainer>
         <BoardTags>
           <Button isActive={activeTag === '전체'} onClick={() => handleTagClick('전체')}>
@@ -302,7 +338,7 @@ const Board = () => {
               <ModalDate>2024.06.03</ModalDate>
               <ModalAuthor>작성자</ModalAuthor>
             </ModalHeader>
-            <hr />
+            <HrLine />
             <ModalBody>
               <div>
                 <Image src={selectedItem.imgSrc} alt={selectedItem.text} />
@@ -334,12 +370,23 @@ const Board = () => {
               <CloseIcon />
             </CloseButton>
             <ModalHeader>
-              <ModalTitle>글 작성</ModalTitle>
             </ModalHeader>
             <ModalBody>
               <CommentSection>
-                <CommentInput placeholder="제목을 입력해 주세요." />
-                <CommentInput placeholder="내용을 입력해 주세요." />
+                <TitleInput placeholder="제목을 입력해 주세요." />
+                <HrLine />
+                <BoardTagsContainer>
+                <BoardTags>
+                  <Button isActive={activeTag === '추천 장소'} onClick={() => handleTagClick('추천 장소')}>
+                    추천 장소
+                  </Button>
+                  <Button isActive={activeTag === '같이 해요'} onClick={() => handleTagClick('같이 해요')}>
+                    같이 해요
+                  </Button>
+                </BoardTags>
+                <PicAddIcon onClick={handlePicAddIconClick} />
+              </BoardTagsContainer>
+                <ContentInput placeholder="내용을 입력해 주세요." />
                 <CommentButton>등록</CommentButton>
               </CommentSection>
             </ModalBody>
