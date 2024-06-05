@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import { ReactComponent as UserIcon } from '../../assets/icons/usericon.svg';
+import { ReactComponent as CloseIcon } from '../../assets/icons/closebutton.svg';
+import { ReactComponent as WriteIcon } from '../../assets/icons/writebutton.svg';
 
 const BoardContainer = styled.div`
   width: 100%;
@@ -10,10 +12,16 @@ const BoardContainer = styled.div`
   box-sizing: border-box;
 `;
 
+const BoardTagsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+`;
+
 const BoardTags = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 1.25rem;
 
   & > *:not(:first-child) {
     margin-left: 1rem;
@@ -83,7 +91,7 @@ const LoadMoreButton = styled.button`
 const ModalContent = styled.div`
   background: white;
   padding: 1.25rem;
-  width: 90%;
+  width: 94%;
   max-width: 60rem;
   height: auto;
   max-height: 80vh;
@@ -91,7 +99,7 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-
+  position: relative;
 `;
 
 const ModalHeader = styled.div`
@@ -119,6 +127,15 @@ const ModalAuthor = styled.div`
   font-weight: bold;
 `;
 
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  position: absolute;
+  top: 0.25rem;
+  right: 0rem;
+  padding-bottom: 2rem;
+`;
+
 const ModalBody = styled.div`
   display: flex;
   gap: 1.25rem;
@@ -140,6 +157,7 @@ const CommentInput = styled.input.attrs({ type: 'text' })`
   box-sizing: border-box;
   height: 5rem;
 `;
+
 const CommentButton = styled(Button)`
   margin-left: auto;
   display: block;
@@ -168,8 +186,8 @@ const CommentAvatar = styled.div`
   margin-right: 0.625rem;
 
   svg {
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
   }
 `;
 
@@ -179,7 +197,7 @@ const CommentContent = styled.div`
 
 const customModalStyles = {
   overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0)'
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   content: {
     top: '50%',
@@ -188,13 +206,13 @@ const customModalStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    width: '90%',
+    width: '94%',
     maxWidth: '60rem',
     height: 'auto',
     maxHeight: '80vh',
     overflowY: 'auto',
     borderRadius: '1rem',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' 
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
   }
 };
 
@@ -210,7 +228,6 @@ const Board = () => {
       text: '다들 귀여운 저희 집 고양이 보고 가세요',
       imgSrc: 'https://via.placeholder.com/150'
     }
-    // 더미 데이터 추가
   ];
 
   const comments = [
@@ -236,28 +253,29 @@ const Board = () => {
     setSelectedItem(null);
   };
 
+  const handleWriteIconClick = () => {
+    // 글쓰기 아이콘 클릭 시 모달을 여는 로직을 추가합니다.
+    setSelectedItem(null); // 새로운 글쓰기 모드를 위해 selectedItem을 null로 설정합니다.
+    setModalIsOpen(true);
+  };
+
   return (
     <BoardContainer>
-      <BoardTags>
-        <Button
-          isActive={activeTag === '전체'}
-          onClick={() => handleTagClick('전체')}
-        >
-          전체
-        </Button>
-        <Button
-          isActive={activeTag === '추천 장소'}
-          onClick={() => handleTagClick('추천 장소')}
-        >
-          추천 장소
-        </Button>
-        <Button
-          isActive={activeTag === '같이 해요'}
-          onClick={() => handleTagClick('같이 해요')}
-        >
-          같이 해요
-        </Button>
-      </BoardTags>
+      <hr />
+      <BoardTagsContainer>
+        <BoardTags>
+          <Button isActive={activeTag === '전체'} onClick={() => handleTagClick('전체')}>
+            전체
+          </Button>
+          <Button isActive={activeTag === '추천 장소'} onClick={() => handleTagClick('추천 장소')}>
+            추천 장소
+          </Button>
+          <Button isActive={activeTag === '같이 해요'} onClick={() => handleTagClick('같이 해요')}>
+            같이 해요
+          </Button>
+        </BoardTags>
+        <WriteIcon onClick={handleWriteIconClick} />
+      </BoardTagsContainer>
       <BoardContent>
         {items.map((item) => (
           <BoardItem key={item.id} onClick={() => openModal(item)}>
@@ -270,17 +288,21 @@ const Board = () => {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        contentLabel='Item Detail Modal'
+        contentLabel="Item Detail Modal"
         ariaHideApp={false}
         style={customModalStyles}
       >
-        {selectedItem && (
+        {selectedItem !== null ? (
           <ModalContent>
+            <CloseButton onClick={closeModal}>
+              <CloseIcon />
+            </CloseButton>
             <ModalHeader>
-                <ModalTitle>{selectedItem.text}</ModalTitle>
-                <ModalDate>2024.06.03</ModalDate>
+              <ModalTitle>{selectedItem.text}</ModalTitle>
+              <ModalDate>2024.06.03</ModalDate>
               <ModalAuthor>작성자</ModalAuthor>
             </ModalHeader>
+            <hr />
             <ModalBody>
               <div>
                 <Image src={selectedItem.imgSrc} alt={selectedItem.text} />
@@ -288,7 +310,7 @@ const Board = () => {
               </div>
               <CommentSection>
                 <h3>댓글</h3>
-                <CommentInput placeholder='내용을 입력해 주세요.' />
+                <CommentInput placeholder="내용을 입력해 주세요." />
                 <CommentButton>등록</CommentButton>
                 <CommentList>
                   {comments.map((comment) => (
@@ -303,6 +325,22 @@ const Board = () => {
                     </CommentItem>
                   ))}
                 </CommentList>
+              </CommentSection>
+            </ModalBody>
+          </ModalContent>
+        ) : (
+          <ModalContent>
+            <CloseButton onClick={closeModal}>
+              <CloseIcon />
+            </CloseButton>
+            <ModalHeader>
+              <ModalTitle>글 작성</ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <CommentSection>
+                <CommentInput placeholder="제목을 입력해 주세요." />
+                <CommentInput placeholder="내용을 입력해 주세요." />
+                <CommentButton>등록</CommentButton>
               </CommentSection>
             </ModalBody>
           </ModalContent>
