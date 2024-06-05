@@ -86,7 +86,7 @@ const PasswordInputContainer = styled.div`
 const VisibilityIcon = styled.img`
   position: absolute;
   right: 1rem;
-  top: 1.2rem;
+  top: 1rem;
   width: 1.2rem;
   cursor: pointer;
 `;
