@@ -169,7 +169,7 @@ const CommentInput = styled.input.attrs({ type: 'text' })`
 const CommentButton = styled(Button)`
   margin-left: auto;
   display: block;
-  background-color: #543D20;
+  background-color: #543d20;
   color: white;
 `;
 
@@ -208,13 +208,12 @@ const TitleInput = styled.input.attrs({ type: 'text' })`
   padding: 0.625rem;
   margin-bottom: 0.625rem;
   border-radius: 0.325rem;
-  border: none; 
+  border: none;
   box-sizing: border-box;
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
 `;
-
 
 const ContentInput = styled.input.attrs({ type: 'text' })`
   width: 100%;
@@ -225,7 +224,6 @@ const ContentInput = styled.input.attrs({ type: 'text' })`
   box-sizing: border-box;
   height: 20rem;
 `;
-
 
 const customModalStyles = {
   overlay: {
@@ -293,20 +291,29 @@ const Board = () => {
 
   const handlePicAddIconClick = () => {
     return null;
-  }
+  };
 
   return (
     <BoardContainer>
       <HrLine />
       <BoardTagsContainer>
         <BoardTags>
-          <Button isActive={activeTag === '전체'} onClick={() => handleTagClick('전체')}>
+          <Button
+            isActive={activeTag === '전체'}
+            onClick={() => handleTagClick('전체')}
+          >
             전체
           </Button>
-          <Button isActive={activeTag === '추천 장소'} onClick={() => handleTagClick('추천 장소')}>
+          <Button
+            isActive={activeTag === '추천 장소'}
+            onClick={() => handleTagClick('추천 장소')}
+          >
             추천 장소
           </Button>
-          <Button isActive={activeTag === '같이 해요'} onClick={() => handleTagClick('같이 해요')}>
+          <Button
+            isActive={activeTag === '같이 해요'}
+            onClick={() => handleTagClick('같이 해요')}
+          >
             같이 해요
           </Button>
         </BoardTags>
@@ -324,7 +331,7 @@ const Board = () => {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        contentLabel="Item Detail Modal"
+        contentLabel='Item Detail Modal'
         ariaHideApp={false}
         style={customModalStyles}
       >
@@ -346,7 +353,7 @@ const Board = () => {
               </div>
               <CommentSection>
                 <h3>댓글</h3>
-                <CommentInput placeholder="내용을 입력해 주세요." />
+                <CommentInput placeholder='내용을 입력해 주세요.' />
                 <CommentButton>등록</CommentButton>
                 <CommentList>
                   {comments.map((comment) => (
@@ -369,24 +376,29 @@ const Board = () => {
             <CloseButton onClick={closeModal}>
               <CloseIcon />
             </CloseButton>
-            <ModalHeader>
-            </ModalHeader>
+            <ModalHeader></ModalHeader>
             <ModalBody>
               <CommentSection>
-                <TitleInput placeholder="제목을 입력해 주세요." />
+                <TitleInput placeholder='제목을 입력해 주세요.' />
                 <HrLine />
                 <BoardTagsContainer>
-                <BoardTags>
-                  <Button isActive={activeTag === '추천 장소'} onClick={() => handleTagClick('추천 장소')}>
-                    추천 장소
-                  </Button>
-                  <Button isActive={activeTag === '같이 해요'} onClick={() => handleTagClick('같이 해요')}>
-                    같이 해요
-                  </Button>
-                </BoardTags>
-                <PicAddIcon onClick={handlePicAddIconClick} />
-              </BoardTagsContainer>
-                <ContentInput placeholder="내용을 입력해 주세요." />
+                  <BoardTags>
+                    <Button
+                      isActive={activeTag === '추천 장소'}
+                      onClick={() => handleTagClick('추천 장소')}
+                    >
+                      추천 장소
+                    </Button>
+                    <Button
+                      isActive={activeTag === '같이 해요'}
+                      onClick={() => handleTagClick('같이 해요')}
+                    >
+                      같이 해요
+                    </Button>
+                  </BoardTags>
+                  <PicAddIcon onClick={handlePicAddIconClick} />
+                </BoardTagsContainer>
+                <ContentInput placeholder='내용을 입력해 주세요.' />
                 <CommentButton>등록</CommentButton>
               </CommentSection>
             </ModalBody>

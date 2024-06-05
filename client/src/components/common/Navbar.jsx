@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { ReactComponent as LogoSVG } from "../../../src/assets/icons/logo.svg";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { ReactComponent as LogoSVG } from '../../assets/icons/Logo.svg';
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -19,9 +19,9 @@ const StyledLogo = styled(LogoSVG)`
 `;
 
 const NavButton = styled.button`
-  font-family: "SUITE";
+  font-family: 'SUITE';
   font-style: normal;
-  font-weight: ${({ isActive }) => (isActive ? "700" : "400")};
+  font-weight: ${({ isActive }) => (isActive ? '700' : '400')};
   font-size: 18px;
   line-height: 16px;
   text-align: center;
@@ -61,38 +61,38 @@ function Navbar() {
 
   return (
     <NavbarContainer>
-      <LogoContainer to={"/"} onClick={handleLogoClick}>
+      <LogoContainer to={'/'} onClick={handleLogoClick}>
         <StyledLogo />
       </LogoContainer>
       <ButtonContainer>
-        <Link to={"/library"}>
+        <Link to={'/library'}>
           <Button
-            isActive={activeButton === "library"}
-            onClick={() => handleButtonClick("library")}
+            isActive={activeButton === 'library'}
+            onClick={() => handleButtonClick('library')}
           >
             도서관찾기
           </Button>
         </Link>
-        <Link to={"/board"}>
+        <Link to={'/board'}>
           <Button
-            isActive={activeButton === "board"}
-            onClick={() => handleButtonClick("board")}
+            isActive={activeButton === 'board'}
+            onClick={() => handleButtonClick('board')}
           >
             게시판
           </Button>
         </Link>
-        <Link to={"/mypage"}>
+        <Link to={'/mypage'}>
           <Button
-            isActive={activeButton === "mypage"}
-            onClick={() => handleButtonClick("mypage")}
+            isActive={activeButton === 'mypage'}
+            onClick={() => handleButtonClick('mypage')}
           >
             마이페이지
           </Button>
         </Link>
-        <Link to={"/logout"}>
+        <Link to={'/login'}>
           <Button
-            isActive={activeButton === "logout"}
-            onClick={() => handleButtonClick("logout")}
+            isActive={activeButton === 'logout'}
+            onClick={() => handleButtonClick('logout')}
           >
             로그아웃
           </Button>

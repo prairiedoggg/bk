@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { ReactComponent as BigLogo } from "../../src/assets/icons/IntroLogo.svg";
+import React from 'react';
+import styled from 'styled-components';
+import { ReactComponent as BigLogo } from '../../src/assets/icons/IntroLogo.svg';
 
 const Container = styled.div`
   display: flex;
@@ -31,7 +31,7 @@ const StyledLeftDiv = styled.div`
 
   /* 당신의 이야기가 시작되는 곳, 서재 나침반 */
 
-  font-family: "SUITE";
+  font-family: 'SUITE';
   font-style: normal;
   font-weight: 500;
   font-size: 36px;
@@ -59,7 +59,7 @@ const StyledRightDiv = styled.div`
   background: rgba(86, 60, 10, 0.7);
   /* 당신만의 서재를 찾아보세요 */
 
-  font-family: "SUITE";
+  font-family: 'SUITE';
   font-style: normal;
   font-weight: 600;
   font-size: 36px;
