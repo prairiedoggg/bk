@@ -55,9 +55,13 @@ function Navbar() {
     setActiveButton(buttonName);
   };
 
+  const handleLogoClick = () => {
+    setActiveButton(null); // StyledLogo를 클릭하면 activeButton을 초기화합니다.
+  };
+
   return (
     <NavbarContainer>
-      <LogoContainer to={"/"}>
+      <LogoContainer to={"/"} onClick={handleLogoClick}>
         <StyledLogo />
       </LogoContainer>
       <ButtonContainer>
