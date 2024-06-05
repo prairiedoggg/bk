@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import AuthContainer from "../components/auth/AuthContainer";
-import SignUpDistrict from "../components/auth/SignUpDistrict";
-import Districts from "../components/auth/Districts";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import AuthContainer from '../components/auth/AuthContainer';
+import SignUpDistrict from '../components/auth/SignUpDistrict';
+import Districts from '../components/auth/Districts';
 
 const SignUpPage = () => (
   <AuthContainer title='회원가입' component={<SignUp />} />
@@ -12,12 +12,12 @@ const SignUpPage = () => (
 export default SignUpPage;
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [checkPassword, setCheckPassword] = useState("");
-  const [name, setName] = useState("");
-  const [checkEmailText, setCheckEmailText] = useState("");
-  const [checkPasswordText, setCheckPasswordText] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [checkPassword, setCheckPassword] = useState('');
+  const [name, setName] = useState('');
+  const [checkEmailText, setCheckEmailText] = useState('');
+  const [checkPasswordText, setCheckPasswordText] = useState('');
   const navigate = useNavigate();
 
   const emailRegEx =
@@ -26,19 +26,19 @@ const SignUp = () => {
   const emailCheck = (email) => {
     const isValid = emailRegEx.test(email);
     if (!isValid) {
-      setCheckEmailText("이메일 형식이 일치하지 않습니다.");
+      setCheckEmailText('이메일 형식이 일치하지 않습니다.');
     } else {
-      setCheckEmailText("");
+      setCheckEmailText('');
     }
     return isValid;
   };
 
   const passwordCheck = (password, checkPassword) => {
     if (password !== checkPassword) {
-      setCheckPasswordText("비밀번호가 일치하지 않습니다.");
+      setCheckPasswordText('비밀번호가 일치하지 않습니다.');
       return;
     } else {
-      setCheckPasswordText("");
+      setCheckPasswordText('');
     }
   };
 
@@ -96,7 +96,7 @@ const SignUp = () => {
         </DistrictContainer>
       </InputContainer>
       <SignUpButton>회원가입</SignUpButton>
-      <TextButton onClick={() => navigate("/login")}>
+      <TextButton onClick={() => navigate('/login')}>
         로그인하러 가기
       </TextButton>
     </>

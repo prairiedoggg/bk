@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import Logo from "../../assets/icons/Logo.svg";
+import React from 'react';
+import styled from 'styled-components';
+import Logo from '../../assets/icons/Logo.svg';
 
 const AuthContainer = ({ title, component }) => {
   return (

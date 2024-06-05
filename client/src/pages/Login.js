@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import AuthContainer from "../components/auth/AuthContainer";
-import InvisibleIcon from "../assets/icons/InvisibleIcon.svg";
-import VisibleIcon from "../assets/icons/VisibleIcon.svg";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import AuthContainer from '../components/auth/AuthContainer';
+import InvisibleIcon from '../assets/icons/InvisibleIcon.svg';
+import VisibleIcon from '../assets/icons/VisibleIcon.svg';
 
 const LoginPage = () => <AuthContainer title='로그인' component={<Login />} />;
 
 export default LoginPage;
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const Login = () => {
         <PasswordInputContainer>
           <Input
             label='비밀번호'
-            type={isPasswordVisible ? "text" : "password"}
+            type={isPasswordVisible ? 'text' : 'password'}
             placeholder='비밀번호 입력'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -48,7 +48,7 @@ const Login = () => {
         <Divider>|</Divider>
         <TextButton>비밀번호 찾기</TextButton>
         <Divider>|</Divider>
-        <TextButton onClick={() => navigate("/signup")}>회원가입</TextButton>
+        <TextButton onClick={() => navigate('/signup')}>회원가입</TextButton>
       </ButtonContainer>
     </>
   );

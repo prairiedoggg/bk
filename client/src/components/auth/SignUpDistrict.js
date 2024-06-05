@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import DropDown from "../../assets/icons/DropDown.svg";
-import UpIcon from "../../assets/icons/UpIcon.svg";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import DropDown from '../../assets/icons/DropDown.svg';
+import UpIcon from '../../assets/icons/UpIcon.svg';
 
 const SignUpDistrict = ({ options }) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -19,7 +19,7 @@ const SignUpDistrict = ({ options }) => {
   return (
     <DropdownContainer>
       <DropdownBox onClick={toggleDropdown}>
-        <TextContainer>{selectedOption || "기본 위치 설정"}</TextContainer>
+        <TextContainer>{selectedOption || '기본 위치 설정'}</TextContainer>
         <IconContainer>
           {isOpen ? (
             <img src={UpIcon} alt='UpIcon' />
