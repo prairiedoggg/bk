@@ -9,14 +9,10 @@ import Mypage from './pages/Mypage';
 import './index.css';
 
 function App() {
-  const noLayout =
-    window.location.pathname === '/login' ||
-    window.location.pathname === '/signup';
-
   return (
     <BrowserRouter>
       <div className='App'>
-        {!noLayout && <Navbar />}
+        <Navbar />
         <Routes>
           <Route path='/' element={<Intro />} />
           <Route path='/login' element={<Login />} />

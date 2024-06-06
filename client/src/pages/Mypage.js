@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import MypageContainer from '../components/mypage/MypageContainer';
+import WriteList from '../components/mypage/WriteList';
 import ProfileIcon from '../assets/icons/ProfileIcon.svg';
 import SettingIcon from '../assets/icons/SettingIcon.svg';
+import WriteListIcon from '../assets/icons/WriteListIcon.svg';
+import CommentIcon from '../assets/icons/CommentIcon.svg';
 
 const Mypage = () => {
   const [name, setName] = useState('이름');
@@ -18,6 +22,11 @@ const Mypage = () => {
         <EditBtn>Edit</EditBtn>
         <SettingBtn src={SettingIcon} alt='setting'></SettingBtn>
       </ProfileConatiner>
+      <MypageContainer
+        icon={WriteListIcon}
+        title='내가 쓴 글'
+        component={<WriteList title='제목' date='2024-06-05' />}
+      />
     </Container>
   );
 };
@@ -25,7 +34,7 @@ const Mypage = () => {
 export default Mypage;
 
 const Container = styled.div`
-  flex: display;
+  display: flex;
   flex-direction: row;
   height: 100vh;
 `;
@@ -54,15 +63,15 @@ const UserName = styled.p`
 `;
 
 const UserEmail = styled.p`
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #565656;
   margin-top: -20px;
 `;
 
 const UserDescription = styled.p`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #191619;
-  margin-top: 40px;
+  margin-top: 35px;
 `;
 
 const EditBtn = styled.button`
