@@ -19,7 +19,7 @@ const SignUpDistrict = ({ options }) => {
   return (
     <DropdownContainer>
       <DropdownBox onClick={toggleDropdown}>
-        <TextContainer>{selectedOption || '기본 위치 설정'}</TextContainer>
+        <TextContainer>{selectedOption || '서울특별시'}</TextContainer>
         <IconContainer>
           {isOpen ? (
             <img src={UpIcon} alt='UpIcon' />
@@ -53,7 +53,7 @@ const DropdownBox = styled.div`
   justify-content: center;
   align-items: center;
   width: 9.5rem;
-  height: 1.5rem;
+  height: 1.6rem;
   color: #191619;
   border: 1px solid #d0d0d0;
   border-radius: 8px;

@@ -1,26 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import AuthModal from './AuthModal';
-import AuthContainer from './AuthContainer';
 import InvisibleIcon from '../../assets/icons/InvisibleIcon.svg';
 import VisibleIcon from '../../assets/icons/VisibleIcon.svg';
 
-const Login = ({ onClose }) => {
-  return (
-    <AuthModal onClose={onClose}>
-      <AuthContainer title='로그인' component={<LoginForm />} />
-    </AuthModal>
-  );
-};
-
-export default Login;
-
-const LoginForm = () => {
+const LoginForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const navigate = useNavigate();
 
   return (
     <>
@@ -55,11 +41,15 @@ const LoginForm = () => {
         <Divider>|</Divider>
         <TextButton>비밀번호 찾기</TextButton>
         <Divider>|</Divider>
-        <TextButton onClick={() => navigate('/signup')}>회원가입</TextButton>
+        <TextButton onClick={() => setFormType('회원가입')}>
+          회원가입
+        </TextButton>
       </ButtonContainer>
     </>
   );
 };
+
+export default LoginForm;
 
 const InputContainer = styled.div`
   display: flex;
@@ -108,6 +98,7 @@ const LoginButton = styled.button`
   cursor: pointer;
   margin-top: 35px;
   font-size: 1rem;
+  font-weight: 500;
 `;
 
 const ButtonContainer = styled.div`

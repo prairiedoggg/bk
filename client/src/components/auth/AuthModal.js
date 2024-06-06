@@ -1,31 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import closebutton from '../../assets/icons/closebutton.svg';
 
-const AuthModal = ({ children, onClose }) => {
-  const [showModal, setShowModal] = useState(true);
+const AuthModal = ({ title, component, onClose }) => {
   const modalElement = document.getElementById('modal');
 
   return (
     <>
-      {showModal &&
-        ReactDOM.createPortal(
-          <Container>
-            <Modal>
-              <CloseBtn src={closebutton} alt='close-btn' onClick={onClose} />
-              {children}
-            </Modal>
-          </Container>,
-          modalElement
-        )}
+      {ReactDOM.createPortal(
+        <ModalContainer>
+          <Modal>
+            <CloseBtn src={closebutton} alt='close-btn' onClick={onClose} />
+            <Container>
+              <Title>{title}</Title>
+              {component}
+            </Container>
+          </Modal>
+        </ModalContainer>,
+        modalElement
+      )}
     </>
   );
 };
 
 export default AuthModal;
 
-const Container = styled.div`
+const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -43,12 +44,11 @@ const Modal = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   border: 1px solid #ececec;
   border-radius: 8px;
   box-shadow: 0px 3px 18px rgba(0, 0, 0, 0.06);
-  height: 30rem;
-  width: 33rem;
+  height: 33rem;
+  width: 35rem;
   padding: 20px;
   position: relative;
 `;
@@ -59,4 +59,19 @@ const CloseBtn = styled.img`
   top: 22px;
   right: 22px;
   cursor: pointer;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+`;
+
+const Title = styled.div`
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #191619;
+  margin-bottom: 30px;
 `;

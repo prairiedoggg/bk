@@ -1,24 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import AuthContainer from '../components/auth/AuthContainer';
-import SignUpDistrict from '../components/auth/SignUpDistrict';
-import Districts from '../components/auth/Districts';
+import SignUpDistrict from './SignUpDistrict';
+import Districts from './Districts';
 
-const SignUpPage = () => (
-  <AuthContainer title='회원가입' component={<SignUp />} />
-);
-
-export default SignUpPage;
-
-const SignUp = () => {
+const SignUpForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
   const [name, setName] = useState('');
   const [checkEmailText, setCheckEmailText] = useState('');
   const [checkPasswordText, setCheckPasswordText] = useState('');
-  const navigate = useNavigate();
 
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
@@ -81,27 +72,32 @@ const SignUp = () => {
             passwordCheck(password, e.target.value);
           }}
         />
-        <Label>이름</Label>
-        <Input
-          label='이름'
-          type='name'
-          placeholder='이름 입력'
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <Label>위치</Label>
-        <DistrictContainer>
-          <DefaultBox>서울특별시</DefaultBox>
-          <SignUpDistrict options={Districts} />
-        </DistrictContainer>
+        <BottomInputBox>
+          <BottomBox>
+            <Label>이름</Label>
+            <NameInput
+              label='이름'
+              type='name'
+              placeholder='이름 입력'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </BottomBox>
+          <BottomBox>
+            <Label>기본 위치 설정</Label>
+            <SignUpDistrict options={Districts} />
+          </BottomBox>
+        </BottomInputBox>
       </InputContainer>
       <SignUpButton>회원가입</SignUpButton>
-      <TextButton onClick={() => navigate('/login')}>
+      <TextButton onClick={() => setFormType('로그인')}>
         로그인하러 가기
       </TextButton>
     </>
   );
 };
+
+export default SignUpForm;
 
 const InputContainer = styled.div`
   display: flex;
@@ -113,6 +109,7 @@ const LabelContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: -10px;
 `;
 
 const Label = styled.p`
@@ -133,11 +130,21 @@ const Input = styled.input`
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px 12px 5px 12px;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
 
   &::placeholder {
     color: #bababa;
   }
+`;
+
+const NameInput = styled.input`
+  width: 10rem;
+  height: 2rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 5px 12px 5px 12px;
+  margin-bottom: 5px;
+  margin-right: 10px;
 `;
 
 const SignUpButton = styled.button`
@@ -148,12 +155,13 @@ const SignUpButton = styled.button`
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  margin-top: 45px;
+  margin-top: 30px;
   font-size: 1rem;
+  font-weight: 500;
 `;
 
 const TextButton = styled.button`
-  margin-top: 20px;
+  margin-top: 10px;
   background: none;
   border: none;
   color: #868686;
@@ -162,20 +170,12 @@ const TextButton = styled.button`
   padding: 0 8px;
 `;
 
-const DistrictContainer = styled.div`
+const BottomInputBox = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-const DefaultBox = styled.div`
-  width: 9.5rem;
-  height: 1.5rem;
+const BottomBox = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #616161;
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  padding: 8px 12px 8px 12px;
-  margin: 0px 20px 10px 0px;
+  flex-direction: column;
 `;

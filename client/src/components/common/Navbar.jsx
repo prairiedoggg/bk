@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { ReactComponent as LogoSVG } from '../../assets/icons/Logo.svg';
-import Login from '../auth/Login';
+import AuthModalController from '../auth/AuthModalController';
 
 function Button({ children, isActive, onClick }) {
   return (
@@ -18,10 +18,12 @@ function Navbar() {
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
+    setShowModal(false);
   };
 
   const handleLogoClick = () => {
     setActiveButton(null); // StyledLogo를 클릭하면 activeButton을 초기화합니다.
+    setShowModal(false);
   };
 
   const handleLoginClick = () => {
@@ -70,7 +72,7 @@ function Navbar() {
           </ButtonContainer>
         </NavbarContainer>
       </NavbarWrapper>
-      {showModal && <Login onClose={handleCloseModal} />}
+      {showModal && <AuthModalController onClose={handleCloseModal} />}
     </>
   );
 }
