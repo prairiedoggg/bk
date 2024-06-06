@@ -77,8 +77,6 @@ function Navbar() {
   );
 }
 
-export default Navbar;
-
 const GlobalStyle = createGlobalStyle`
   body, html {
     margin: 0;
@@ -132,3 +130,5 @@ const ButtonContainer = styled.div`
   display: flex;
   margin-top: 20px;
 `;
+
+export default Navbar;
