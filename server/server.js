@@ -1,13 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const libraryRoutes = require("./routes/libraryRoutes");
+const Library = require("./models/librarySchema");
+const Park = require("./models/parkSchema");
+const bodyParser = require("body-parser");
 
 dotenv.config();
 
 const app = express();
-
 app.use(bodyParser.json());
 
 mongoose.connect(
@@ -15,9 +15,27 @@ mongoose.connect(
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 
-app.use("/libraries", libraryRoutes);
+app.use(express.static("public"));
 
-const PORT = process.env.PORT || 8000;
+app.get("/api/libraries", async (req, res) => {
+  try {
+    const libraries = await Library.find({});
+    res.json(libraries);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.get("/api/parks", async (req, res) => {
+  try {
+    const parks = await Park.find({});
+    res.json(parks);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
