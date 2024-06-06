@@ -7,14 +7,12 @@ import Board from './components/board/Board';
 import SignUp from './pages/SignUp';
 
 function App() {
-  const noLayout =
-    window.location.pathname === '/login' ||
-    window.location.pathname === '/signup';
+
 
   return (
     <BrowserRouter>
       <div className='App'>
-        {!noLayout && <Navbar />}
+        <Navbar/>
         <Routes>
           <Route path='/' element={<Intro />} />
           <Route path='/login' element={<Login />} />
