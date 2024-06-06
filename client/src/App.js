@@ -5,16 +5,16 @@ import Navbar from './components/common/Navbar';
 import Intro from './pages/Intro';
 import Board from './components/board/Board';
 import SignUp from './pages/SignUp';
+import Main from './pages/Main';
 
 function App() {
-
-
   return (
     <BrowserRouter>
       <div className='App'>
-        <Navbar/>
+        <Navbar />
         <Routes>
           <Route path='/' element={<Intro />} />
+          <Route path='/library' element={<Main />} />
           <Route path='/login' element={<Login />} />
           <Route path='/board' element={<Board />} />
           <Route path='/signup' element={<SignUp />} />

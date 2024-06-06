@@ -2,6 +2,23 @@ import React from 'react';
 import styled from 'styled-components';
 import { ReactComponent as BigLogo } from '../../src/assets/icons/IntroLogo.svg';
 
+function Intro() {
+  return (
+    <div>
+      <Container>
+        <StyledBigLogo />
+      </Container>
+      <StyledLeftDiv>
+        <TextWithMargin>당신의 이야기가 시작되는 곳,</TextWithMargin>
+        <TextWithMargin>서재나침반</TextWithMargin>
+      </StyledLeftDiv>
+      <StyledRightDiv>
+        <TextWithMargin>당신의 서재를 찾아보세요</TextWithMargin>
+      </StyledRightDiv>
+    </div>
+  );
+}
+
 const Container = styled.div`
   display: flex;
   justify-content: center; /* 가로 중앙 정렬 */
@@ -75,22 +92,5 @@ const StyledRightDiv = styled.div`
 const TextWithMargin = styled.div`
   margin: 20px;
 `;
-
-function Intro() {
-  return (
-    <div>
-      <Container>
-        <StyledBigLogo />
-      </Container>
-      <StyledLeftDiv>
-        <TextWithMargin>당신의 이야기가 시작되는 곳,</TextWithMargin>
-        <TextWithMargin>서재나침반</TextWithMargin>
-      </StyledLeftDiv>
-      <StyledRightDiv>
-        <TextWithMargin>당신의 서재를 찾아보세요</TextWithMargin>
-      </StyledRightDiv>
-    </div>
-  );
-}
 
 export default Intro;
