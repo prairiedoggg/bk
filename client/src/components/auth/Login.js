@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import AuthContainer from '../components/auth/AuthContainer';
-import InvisibleIcon from '../assets/icons/InvisibleIcon.svg';
-import VisibleIcon from '../assets/icons/VisibleIcon.svg';
+import AuthModal from './AuthModal';
+import AuthContainer from './AuthContainer';
+import InvisibleIcon from '../../assets/icons/InvisibleIcon.svg';
+import VisibleIcon from '../../assets/icons/VisibleIcon.svg';
 
-const LoginPage = () => <AuthContainer title='로그인' component={<Login />} />;
+const Login = ({ onClose }) => {
+  return (
+    <AuthModal onClose={onClose}>
+      <AuthContainer title='로그인' component={<LoginForm />} />
+    </AuthModal>
+  );
+};
 
-export default LoginPage;
+export default Login;
 
-const Login = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -72,7 +79,7 @@ const Input = styled.input`
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px 12px 5px 12px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 
   &::placeholder {
     color: #bababa;
@@ -99,7 +106,7 @@ const LoginButton = styled.button`
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  margin-top: 45px;
+  margin-top: 35px;
   font-size: 1rem;
 `;
 
