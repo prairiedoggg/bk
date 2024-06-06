@@ -5,6 +5,221 @@ import { ReactComponent as UserIcon } from '../../assets/icons/usericon.svg';
 import { ReactComponent as CloseIcon } from '../../assets/icons/closebutton.svg';
 import { ReactComponent as WriteIcon } from '../../assets/icons/writebutton.svg';
 import { ReactComponent as PicAddIcon } from '../../assets/icons/picaddbutton.svg';
+import { ReactComponent as ArrowLeft } from '../../assets/icons/arrowleft.svg';
+import { ReactComponent as ArrowRight } from '../../assets/icons/arrowright.svg';
+import { ReactComponent as DoubleArrowLeft } from '../../assets/icons/doublearrowleft.svg';
+import { ReactComponent as DoubleArrowRight } from '../../assets/icons/doublearrowright.svg';
+
+const Board = () => {
+  const items = [];
+  for (let i = 1; i <= 150; i++) {
+    items.push({
+      id: i,
+      text: '다들 귀여운 저희 집 고양이 보고 가세요',
+      imgSrc: 'https://via.placeholder.com/150'
+    });
+  }
+
+  const comments = [
+    { id: 1, author: '이름', text: '고양이 귀여워' },
+    { id: 2, author: '이름', text: '고양이 귀여워' }
+  ];
+
+  const [activeTag, setActiveTag] = useState('전체');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const pagesToShow = 5;
+
+  const handleTagClick = (tag) => {
+    setActiveTag(tag);
+  };
+
+  const openModal = (item) => {
+    setSelectedItem(item);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedItem(null);
+  };
+
+  const handleWriteIconClick = () => {
+    setSelectedItem(null);
+    setModalIsOpen(true);
+  };
+
+  const handlePicAddIconClick = () => {
+    return null;
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleFirstPageClick = () => {
+    setCurrentPage(1);
+  };
+
+  const handleLastPageClick = () => {
+    setCurrentPage(totalPages);
+  };
+
+  const handlePrevPageClick = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPageClick = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const paginatedItems = items.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const startPage = Math.max(1, currentPage - Math.floor(pagesToShow / 2));
+  const endPage = Math.min(totalPages, startPage + pagesToShow - 1);
+
+  return (
+    <BoardContainer>
+      <BoardTagsContainer>
+        <BoardTags>
+          <Button
+            isActive={activeTag === '전체'}
+            onClick={() => handleTagClick('전체')}
+          >
+            전체
+          </Button>
+          <Button
+            isActive={activeTag === '추천 장소'}
+            onClick={() => handleTagClick('추천 장소')}
+          >
+            추천 장소
+          </Button>
+          <Button
+            isActive={activeTag === '같이 해요'}
+            onClick={() => handleTagClick('같이 해요')}
+          >
+            같이 해요
+          </Button>
+        </BoardTags>
+        <WriteIcon onClick={handleWriteIconClick} />
+      </BoardTagsContainer>
+      <BoardContent>
+        {paginatedItems.map((item) => (
+          <BoardItem key={item.id} onClick={() => openModal(item)}>
+            <Image src={item.imgSrc} alt={item.text} />
+            <p>{item.text}</p>
+          </BoardItem>
+        ))}
+      </BoardContent>
+      <PaginationContainer>
+        <PaginationButton onClick={handleFirstPageClick}>
+          <DoubleArrowLeft />
+        </PaginationButton>
+        <PaginationButton onClick={handlePrevPageClick}>
+          <ArrowLeft />
+        </PaginationButton>
+        {Array.from({ length: endPage - startPage + 1 }, (_, index) => (
+          <PaginationButton
+            key={startPage + index}
+            isActive={currentPage === startPage + index}
+            onClick={() => handlePageClick(startPage + index)}
+          >
+            {startPage + index}
+          </PaginationButton>
+        ))}
+        <PaginationButton onClick={handleNextPageClick}>
+          <ArrowRight />
+        </PaginationButton>
+        <PaginationButton onClick={handleLastPageClick}>
+          <DoubleArrowRight />
+        </PaginationButton>
+      </PaginationContainer>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel='Item Detail Modal'
+        ariaHideApp={false}
+        style={customModalStyles}
+      >
+        {selectedItem !== null ? (
+          <ModalContent>
+            <CloseButton onClick={closeModal}>
+              <CloseIcon />
+            </CloseButton>
+            <ModalHeader>
+              <ModalTitle>{selectedItem.text}</ModalTitle>
+              <ModalDate>2024.06.03</ModalDate>
+              <ModalAuthor>작성자</ModalAuthor>
+            </ModalHeader>
+            <HrLine />
+            <ModalBody>
+              <div>
+                <Image src={selectedItem.imgSrc} alt={selectedItem.text} />
+                <p>다들 귀여운 저희 집 고양이 보고 가세요</p>
+              </div>
+              <CommentSection>
+                <h3>댓글</h3>
+                <CommentInput placeholder='내용을 입력해 주세요.' />
+                <CommentButton>등록</CommentButton>
+                <CommentList>
+                  {comments.map((comment) => (
+                    <CommentItem key={comment.id}>
+                      <CommentAvatar>
+                        <UserIcon />
+                      </CommentAvatar>
+                      <CommentContent>
+                        <strong>{comment.author}</strong>
+                        <p>{comment.text}</p>
+                      </CommentContent>
+                    </CommentItem>
+                  ))}
+                </CommentList>
+              </CommentSection>
+            </ModalBody>
+          </ModalContent>
+        ) : (
+          <ModalContent>
+            <CloseButton onClick={closeModal}>
+              <CloseIcon />
+            </CloseButton>
+            <ModalHeader></ModalHeader>
+            <ModalBody>
+              <CommentSection>
+                <TitleInput placeholder='제목을 입력해 주세요.' />
+                <HrLine />
+                <BoardTagsContainer>
+                  <BoardTags>
+                    <Button
+                      isActive={activeTag === '추천 장소'}
+                      onClick={() => handleTagClick('추천 장소')}
+                    >
+                      추천 장소
+                    </Button>
+                    <Button
+                      isActive={activeTag === '같이 해요'}
+                      onClick={() => handleTagClick('같이 해요')}
+                    >
+                      같이 해요
+                    </Button>
+                  </BoardTags>
+                  <PicAddIcon onClick={handlePicAddIconClick} />
+                </BoardTagsContainer>
+                <ContentInput placeholder='내용을 입력해 주세요.' />
+                <CommentButton>등록</CommentButton>
+              </CommentSection>
+            </ModalBody>
+          </ModalContent>
+        )}
+      </Modal>
+    </BoardContainer>
+  );
+};
 
 const HrLine = styled.hr`
   border: none;
@@ -91,13 +306,12 @@ const PaginationContainer = styled.div`
 const PaginationButton = styled.button`
   background-color: ${(props) => (props.isActive ? '#543D20' : 'white')};
   color: ${(props) => (props.isActive ? 'white' : '#8a5a2b')};
-  border: 0.063rem solid #8a5a2b;
+  border: none;
   padding: 0.5rem 1rem;
   border-radius: 1.25rem;
   cursor: pointer;
   font-size: 0.875rem;
   margin: 0 0.325rem;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const ModalContent = styled.div`
@@ -248,192 +462,6 @@ const customModalStyles = {
     borderRadius: '1rem',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
   }
-};
-
-const Board = () => {
-  const items = [
-    {
-      id: 1,
-      text: '우리집 고양이 너무 귀여워',
-      imgSrc: 'https://via.placeholder.com/150'
-    },
-    {
-      id: 2,
-      text: '다들 귀여운 저희 집 고양이 보고 가세요',
-      imgSrc: 'https://via.placeholder.com/150'
-    }
-  ];
-
-  const comments = [
-    { id: 1, author: '이름', text: '고양이 귀여워' },
-    { id: 2, author: '이름', text: '고양이 귀여워' }
-  ];
-
-  const [activeTag, setActiveTag] = useState('전체');
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const handleTagClick = (tag) => {
-    setActiveTag(tag);
-  };
-
-  const openModal = (item) => {
-    setSelectedItem(item);
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setSelectedItem(null);
-  };
-
-  const handleWriteIconClick = () => {
-    // 글쓰기 아이콘 클릭 시 모달을 여는 로직을 추가합니다.
-    setSelectedItem(null); // 새로운 글쓰기 모드를 위해 selectedItem을 null로 설정합니다.
-    setModalIsOpen(true);
-  };
-
-  const handlePicAddIconClick = () => {
-    return null;
-  };
-
-  const handlePageClick = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const paginatedItems = items.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const totalPages = Math.ceil(items.length / itemsPerPage);
-
-  return (
-    <BoardContainer>
-      <HrLine />
-      <BoardTagsContainer>
-        <BoardTags>
-          <Button
-            isActive={activeTag === '전체'}
-            onClick={() => handleTagClick('전체')}
-          >
-            전체
-          </Button>
-          <Button
-            isActive={activeTag === '추천 장소'}
-            onClick={() => handleTagClick('추천 장소')}
-          >
-            추천 장소
-          </Button>
-          <Button
-            isActive={activeTag === '같이 해요'}
-            onClick={() => handleTagClick('같이 해요')}
-          >
-            같이 해요
-          </Button>
-        </BoardTags>
-        <WriteIcon onClick={handleWriteIconClick} />
-      </BoardTagsContainer>
-      <BoardContent>
-        {paginatedItems.map((item) => (
-          <BoardItem key={item.id} onClick={() => openModal(item)}>
-            <Image src={item.imgSrc} alt={item.text} />
-            <p>{item.text}</p>
-          </BoardItem>
-        ))}
-      </BoardContent>
-      <PaginationContainer>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <PaginationButton
-            key={index + 1}
-            isActive={currentPage === index + 1}
-            onClick={() => handlePageClick(index + 1)}
-          >
-            {index + 1}
-          </PaginationButton>
-        ))}
-      </PaginationContainer>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel='Item Detail Modal'
-        ariaHideApp={false}
-        style={customModalStyles}
-      >
-        {selectedItem !== null ? (
-          <ModalContent>
-            <CloseButton onClick={closeModal}>
-              <CloseIcon />
-            </CloseButton>
-            <ModalHeader>
-              <ModalTitle>{selectedItem.text}</ModalTitle>
-              <ModalDate>2024.06.03</ModalDate>
-              <ModalAuthor>작성자</ModalAuthor>
-            </ModalHeader>
-            <HrLine />
-            <ModalBody>
-              <div>
-                <Image src={selectedItem.imgSrc} alt={selectedItem.text} />
-                <p>다들 귀여운 저희 집 고양이 보고 가세요</p>
-              </div>
-              <CommentSection>
-                <h3>댓글</h3>
-                <CommentInput placeholder='내용을 입력해 주세요.' />
-                <CommentButton>등록</CommentButton>
-                <CommentList>
-                  {comments.map((comment) => (
-                    <CommentItem key={comment.id}>
-                      <CommentAvatar>
-                        <UserIcon />
-                      </CommentAvatar>
-                      <CommentContent>
-                        <strong>{comment.author}</strong>
-                        <p>{comment.text}</p>
-                      </CommentContent>
-                    </CommentItem>
-                  ))}
-                </CommentList>
-              </CommentSection>
-            </ModalBody>
-          </ModalContent>
-        ) : (
-          <ModalContent>
-            <CloseButton onClick={closeModal}>
-              <CloseIcon />
-            </CloseButton>
-            <ModalHeader></ModalHeader>
-            <ModalBody>
-              <CommentSection>
-                <TitleInput placeholder='제목을 입력해 주세요.' />
-                <HrLine />
-                <BoardTagsContainer>
-                  <BoardTags>
-                    <Button
-                      isActive={activeTag === '추천 장소'}
-                      onClick={() => handleTagClick('추천 장소')}
-                    >
-                      추천 장소
-                    </Button>
-                    <Button
-                      isActive={activeTag === '같이 해요'}
-                      onClick={() => handleTagClick('같이 해요')}
-                    >
-                      같이 해요
-                    </Button>
-                  </BoardTags>
-                  <PicAddIcon onClick={handlePicAddIconClick} />
-                </BoardTagsContainer>
-                <ContentInput placeholder='내용을 입력해 주세요.' />
-                <CommentButton>등록</CommentButton>
-              </CommentSection>
-            </ModalBody>
-          </ModalContent>
-        )}
-      </Modal>
-    </BoardContainer>
-  );
 };
 
 export default Board;
