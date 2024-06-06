@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import AuthContainer from '../components/auth/AuthContainer';
-import InvisibleIcon from '../assets/icons/InvisibleIcon.svg';
-import VisibleIcon from '../assets/icons/VisibleIcon.svg';
+import InvisibleIcon from '../../assets/icons/InvisibleIcon.svg';
+import VisibleIcon from '../../assets/icons/VisibleIcon.svg';
 
-const LoginPage = () => <AuthContainer title='로그인' component={<Login />} />;
-
-export default LoginPage;
-
-const Login = () => {
+const LoginForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const navigate = useNavigate();
 
   return (
     <>
@@ -48,11 +41,15 @@ const Login = () => {
         <Divider>|</Divider>
         <TextButton>비밀번호 찾기</TextButton>
         <Divider>|</Divider>
-        <TextButton onClick={() => navigate('/signup')}>회원가입</TextButton>
+        <TextButton onClick={() => setFormType('회원가입')}>
+          회원가입
+        </TextButton>
       </ButtonContainer>
     </>
   );
 };
+
+export default LoginForm;
 
 const InputContainer = styled.div`
   display: flex;
@@ -72,7 +69,7 @@ const Input = styled.input`
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px 12px 5px 12px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 
   &::placeholder {
     color: #bababa;
@@ -86,7 +83,7 @@ const PasswordInputContainer = styled.div`
 const VisibilityIcon = styled.img`
   position: absolute;
   right: 1rem;
-  top: 1.2rem;
+  top: 1rem;
   width: 1.2rem;
   cursor: pointer;
 `;
@@ -99,8 +96,9 @@ const LoginButton = styled.button`
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  margin-top: 45px;
+  margin-top: 35px;
   font-size: 1rem;
+  font-weight: 500;
 `;
 
 const ButtonContainer = styled.div`
