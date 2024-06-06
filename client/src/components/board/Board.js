@@ -82,18 +82,22 @@ const Image = styled.img`
   margin-bottom: 0.625rem;
 `;
 
-const LoadMoreButton = styled.button`
-  display: block;
-  margin: 1.25rem auto;
-  margin-top: 2%;
-  background-color: #543d20;
-  color: white;
-  border: none;
-  padding: 0.625rem 1.25rem;
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 1.25rem;
+`;
+
+const PaginationButton = styled.button`
+  background-color: ${(props) => (props.isActive ? '#543D20' : 'white')};
+  color: ${(props) => (props.isActive ? 'white' : '#8a5a2b')};
+  border: 0.063rem solid #8a5a2b;
+  padding: 0.5rem 1rem;
   border-radius: 1.25rem;
   cursor: pointer;
-  font-size: 1rem;
-  width: 10%;
+  font-size: 0.875rem;
+  margin: 0 0.325rem;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const ModalContent = styled.div`
@@ -268,6 +272,8 @@ const Board = () => {
   const [activeTag, setActiveTag] = useState('전체');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const handleTagClick = (tag) => {
     setActiveTag(tag);
@@ -292,6 +298,17 @@ const Board = () => {
   const handlePicAddIconClick = () => {
     return null;
   };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const paginatedItems = items.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPages = Math.ceil(items.length / itemsPerPage);
 
   return (
     <BoardContainer>
@@ -320,14 +337,24 @@ const Board = () => {
         <WriteIcon onClick={handleWriteIconClick} />
       </BoardTagsContainer>
       <BoardContent>
-        {items.map((item) => (
+        {paginatedItems.map((item) => (
           <BoardItem key={item.id} onClick={() => openModal(item)}>
             <Image src={item.imgSrc} alt={item.text} />
             <p>{item.text}</p>
           </BoardItem>
         ))}
       </BoardContent>
-      <LoadMoreButton>더보기</LoadMoreButton>
+      <PaginationContainer>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <PaginationButton
+            key={index + 1}
+            isActive={currentPage === index + 1}
+            onClick={() => handlePageClick(index + 1)}
+          >
+            {index + 1}
+          </PaginationButton>
+        ))}
+      </PaginationContainer>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
