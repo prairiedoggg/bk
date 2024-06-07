@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import AuthModal from './AuthModal';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+import ProfileEditForm from '../mypage/ProfileEditForm';
 
-const AuthModalController = ({ onClose }) => {
-  const [formType, setFormType] = useState('로그인');
+const AuthModalController = ({ onClose, initialFormType }) => {
+  const [formType, setFormType] = useState(initialFormType);
 
   const renderForm = () => {
     switch (formType) {
@@ -12,6 +13,8 @@ const AuthModalController = ({ onClose }) => {
         return <LoginForm setFormType={setFormType} />;
       case '회원가입':
         return <SignUpForm setFormType={setFormType} />;
+      case '기본 정보 수정':
+        return <ProfileEditForm />;
       default:
         return null;
     }

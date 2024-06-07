@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import SignUpDistrict from './SignUpDistrict';
 import Districts from './Districts';
+import GoogleIcon from '../../assets/icons/GoogleLogo.svg';
 
 const SignUpForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
+  const [foundAnswer, setFoundAnswer] = useState('');
   const [name, setName] = useState('');
   const [checkEmailText, setCheckEmailText] = useState('');
   const [checkPasswordText, setCheckPasswordText] = useState('');
@@ -72,6 +74,14 @@ const SignUpForm = ({ setFormType }) => {
             passwordCheck(password, e.target.value);
           }}
         />
+        <Label>아이디 찾기 질문</Label>
+        <Input
+          label='아이디 찾기 질문'
+          type='text'
+          placeholder='가장 좋아하는 작가 이름'
+          value={foundAnswer}
+          onChange={(e) => setFoundAnswer(e.target.value)}
+        />
         <BottomInputBox>
           <BottomBox>
             <Label>이름</Label>
@@ -85,11 +95,15 @@ const SignUpForm = ({ setFormType }) => {
           </BottomBox>
           <BottomBox>
             <Label>기본 위치 설정</Label>
-            <SignUpDistrict options={Districts} />
+            <SignUpDistrict options={Districts} location='서울특별시' />
           </BottomBox>
         </BottomInputBox>
       </InputContainer>
       <SignUpButton>회원가입</SignUpButton>
+      <GoogleButton>
+        <GoogleIconImg src={GoogleIcon} alt='google-icon' />
+        Google로 시작하기
+      </GoogleButton>
       <TextButton onClick={() => setFormType('로그인')}>
         로그인하러 가기
       </TextButton>
@@ -102,6 +116,7 @@ export default SignUpForm;
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: -10px;
 `;
 
 const LabelContainer = styled.div`
@@ -109,7 +124,6 @@ const LabelContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: -10px;
 `;
 
 const Label = styled.p`
@@ -126,11 +140,12 @@ const CheckText = styled.p`
 
 const Input = styled.input`
   width: 22rem;
-  height: 2.1rem;
+  height: 1.8rem;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px 12px 5px 12px;
-  margin-bottom: 1px;
+  margin-top: -2px;
+  margin-bottom: -5px;
 
   &::placeholder {
     color: #bababa;
@@ -139,17 +154,16 @@ const Input = styled.input`
 
 const NameInput = styled.input`
   width: 10rem;
-  height: 2rem;
+  height: 1.7rem;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px 12px 5px 12px;
-  margin-bottom: 5px;
-  margin-right: 10px;
+  margin: -2px 10px 5px 0px;
 `;
 
 const SignUpButton = styled.button`
-  width: 10rem;
-  height: 2.5rem;
+  width: 13rem;
+  height: 2.7rem;
   background-color: #563c0a;
   color: white;
   border-radius: 10px;
@@ -160,6 +174,28 @@ const SignUpButton = styled.button`
   font-weight: 500;
 `;
 
+const GoogleButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 13rem;
+  height: 2.7rem;
+  background-color: #ffffff;
+  color: #5a5a5a;
+  border-radius: 10px;
+  border: 1px solid #d0d0d0;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+`;
+
+const GoogleIconImg = styled.img`
+  width: 1.1rem;
+  margin-right: 10px;
+`;
+
 const TextButton = styled.button`
   margin-top: 10px;
   background: none;
@@ -168,6 +204,7 @@ const TextButton = styled.button`
   font-size: 0.9rem;
   cursor: pointer;
   padding: 0 8px;
+  margin-top: 30px;
 `;
 
 const BottomInputBox = styled.div`

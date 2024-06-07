@@ -72,7 +72,12 @@ function Navbar() {
           </ButtonContainer>
         </NavbarContainer>
       </NavbarWrapper>
-      {showModal && <AuthModalController onClose={handleCloseModal} />}
+      {showModal && (
+        <AuthModalController
+          onClose={handleCloseModal}
+          initialFormType='로그인'
+        />
+      )}
     </>
   );
 }
