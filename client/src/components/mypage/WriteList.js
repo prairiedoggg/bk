@@ -10,7 +10,9 @@ const WriteList = ({ title, date }) => {
           <Title>{title}</Title>
           <Date>{date}</Date>
         </TextBox>
-        <Icon src={DeleteIcon} alt='delete-icon' />
+        <DeleteWrite>
+          <DeleteIconImg src={DeleteIcon} alt='delete-icon' />
+        </DeleteWrite>
       </List>
     </ListContainer>
   );
@@ -45,6 +47,12 @@ const Date = styled.span`
   color: #868686;
 `;
 
-const Icon = styled.img`
+const DeleteWrite = styled.button`
+  border: none;
+  background-color: transparent;
+`;
+
+const DeleteIconImg = styled.img`
   width: 1.2rem;
+  cursor: pointer;
 `;
