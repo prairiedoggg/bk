@@ -13,9 +13,9 @@ router.get("/", async (req, res, next) => {
 });
 
 // 특정 유저의 리뷰 목록 조회
-router.get("/user/:userId", async (req, res, next) => {
+router.post("/user", async (req, res, next) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.body;
     const reviews = await Review.find({ user: userId }).populate("library");
     res.json(reviews);
   } catch (error) {
@@ -24,10 +24,9 @@ router.get("/user/:userId", async (req, res, next) => {
 });
 
 // 리뷰 작성
-router.post("/:userId", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    const { libraryId, rating, comment } = req.body;
+    const { userId, libraryId, rating, comment } = req.body;
 
     const review = new Review({
       user: userId,

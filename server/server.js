@@ -68,7 +68,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/libraries", libraryRoutes);
 app.use("/api/reviews", reviewRoutes);
 
-// 루트 경로로 들어오는 요청에 대해 index.html 파일을 응답합니다.
+// 루트 경로로 들어오는 요청에 대해 index.html 파일을 응답
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "templates", "index.html"));
 });

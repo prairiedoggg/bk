@@ -3,11 +3,22 @@ const router = express.Router();
 const User = require("../models/userSchema");
 const Review = require("../models/reviewSchema");
 
-// 프로필 편집
-router.put("/:userId/profile", async (req, res, next) => {
+// 사용자 생성
+router.post("/", async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    const { name, comments, pictureUrl } = req.body;
+    const { username, password, email } = req.body;
+    const newUser = new User({ username, password, email });
+    await newUser.save();
+    res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// 프로필 편집
+router.put("/profile", async (req, res, next) => {
+  try {
+    const { userId, name, comments, pictureUrl } = req.body;
 
     const user = await User.findByIdAndUpdate(
       userId,
@@ -23,9 +34,9 @@ router.put("/:userId/profile", async (req, res, next) => {
 });
 
 // 찜해둔 도서관 목록
-router.get("/:userId/favoriteLibraries", async (req, res, next) => {
+router.post("/favoriteLibrariesList", async (req, res, next) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.body;
     const user = await User.findById(userId).populate("favoriteLibraries");
     if (!user) return res.status(404).send("유저를 찾을 수 없습니다.");
     res.json(user.favoriteLibraries);
@@ -35,9 +46,9 @@ router.get("/:userId/favoriteLibraries", async (req, res, next) => {
 });
 
 // 도서관 찜하기
-router.post("/:userId/favoriteLibraries/:libraryId", async (req, res, next) => {
+router.post("/favoriteLibraries", async (req, res, next) => {
   try {
-    const { userId, libraryId } = req.params;
+    const { userId, libraryId } = req.body;
     const user = await User.findById(userId);
     if (!user) return res.status(404).send("유저를 찾을 수 없습니다.");
 
@@ -54,23 +65,20 @@ router.post("/:userId/favoriteLibraries/:libraryId", async (req, res, next) => {
 });
 
 // 찜한 도서관 삭제
-router.delete(
-  "/:userId/favoriteLibraries/:libraryId",
-  async (req, res, next) => {
-    try {
-      const { userId, libraryId } = req.params;
-      const user = await User.findById(userId);
-      if (!user) return res.status(404).send("유저를 찾을 수 없습니다.");
+router.delete("/favoriteLibraries", async (req, res, next) => {
+  try {
+    const { userId, libraryId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).send("유저를 찾을 수 없습니다.");
 
-      user.favoriteLibraries = user.favoriteLibraries.filter(
-        (id) => id.toString() !== libraryId
-      );
-      await user.save();
-      res.status(200).send("도서관을 삭제했습니다.");
-    } catch (error) {
-      next(error);
-    }
+    user.favoriteLibraries = user.favoriteLibraries.filter(
+      (id) => id.toString() !== libraryId
+    );
+    await user.save();
+    res.status(200).send("도서관을 삭제했습니다.");
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 module.exports = router;
