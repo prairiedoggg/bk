@@ -17,6 +17,7 @@
         "flask": "^0.2.10",
         "mongodb": "^6.7.0",
         "mongoose": "^8.4.1",
+        "multer": "^1.4.5-lts.1",
         "nodemon": "^3.1.2",
         "pandas": "^0.0.3",
         "python": "^0.0.4"

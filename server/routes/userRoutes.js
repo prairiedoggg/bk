@@ -1,7 +1,21 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
 const router = express.Router();
 const User = require("../models/userSchema");
 const Review = require("../models/reviewSchema");
+
+// 파일 저장 경로 및 파일명 설정
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // 파일이 저장될 경로
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // 파일명 설정
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // 사용자 생성
 router.post("/", async (req, res, next) => {
@@ -32,6 +46,29 @@ router.put("/profile", async (req, res, next) => {
     next(error);
   }
 });
+
+// 프로필 사진 업로드
+router.put(
+  "/profilePicture",
+  upload.single("profilePicture"),
+  async (req, res, next) => {
+    try {
+      const { userId } = req.body;
+      const pictureUrl = `/uploads/${req.file.filename}`;
+
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { profile: { pictureUrl } },
+        { new: true }
+      );
+
+      if (!user) return res.status(404).send("유저를 찾을 수 없습니다.");
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // 찜해둔 도서관 목록
 router.post("/favoriteLibrariesList", async (req, res, next) => {

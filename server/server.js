@@ -34,6 +34,7 @@ mongoose
 // 미들웨어 설정
 app.use(bodyParser.json());
 app.use("/static", express.static(path.join(__dirname, "static")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // 도서관 위치 데이터를 반환하는 엔드포인트
 app.get("/api/library_locations", async (req, res, next) => {
