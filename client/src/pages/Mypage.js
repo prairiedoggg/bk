@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import MypageContainer from '../components/mypage/MypageContainer';
+import MypageBox from '../components/mypage/MypageBox';
 import WriteList from '../components/mypage/WriteList';
+import BookMarkList from '../components/mypage/BookMarkList';
 import ProfileIcon from '../assets/icons/ProfileIcon.svg';
 import SettingIcon from '../assets/icons/SettingIcon.svg';
 import WriteListIcon from '../assets/icons/WriteListIcon.svg';
 import CommentIcon from '../assets/icons/CommentIcon.svg';
+import BookMark from '../assets/icons/BookMark.svg';
+import StarIcon from '../assets/icons/StarIcon.svg';
+import MapIcon from '../assets/icons/MapIcon.svg';
 
 const Mypage = () => {
   const [name, setName] = useState('이름');
@@ -22,11 +26,34 @@ const Mypage = () => {
         <EditBtn>Edit</EditBtn>
         <SettingBtn src={SettingIcon} alt='setting'></SettingBtn>
       </ProfileConatiner>
-      <MypageContainer
-        icon={WriteListIcon}
-        title='내가 쓴 글'
-        component={<WriteList title='제목' date='2024-06-05' />}
-      />
+      <MypageContainer>
+        <MypageBox
+          icon={WriteListIcon}
+          title='내가 쓴 글'
+          component={<WriteList title='제목' date='2024-06-05' />}
+        />
+        <MypageBox
+          icon={CommentIcon}
+          title='내가 쓴 댓글'
+          component={<WriteList title='제목' date='2024-06-05' />}
+        />
+        <MypageBox
+          icon={BookMark}
+          title='즐겨찾기 장소'
+          component={
+            <BookMarkList
+              title='성동구립성수도서관'
+              location='서울 성동구 뚝섬로1길 43 성수문화복지회관 7층'
+            />
+          }
+          mapIcon={MapIcon}
+        />
+        <MypageBox
+          icon={StarIcon}
+          title='작성한 리뷰'
+          component={<WriteList title='제목' date='2024-06-05' />}
+        />
+      </MypageContainer>
     </Container>
   );
 };
@@ -36,7 +63,7 @@ export default Mypage;
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  height: calc(100vh - 60px);
 `;
 
 const ProfileConatiner = styled.div`
@@ -46,8 +73,7 @@ const ProfileConatiner = styled.div`
   justify-content: center;
   text-align: center;
   background-color: #eed8bc;
-  width: 25rem;
-  height: 100%;
+  width: 21.5rem;
   position: relative;
 `;
 
@@ -92,7 +118,16 @@ const SettingBtn = styled.img`
   padding: 5px 10px 5px 10px;
   border: none;
   position: absolute;
-  bottom: 20px;
+  bottom: 50px;
   left: 20px;
   cursor: pointer;
+`;
+
+const MypageContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 50px;
+  align-items: center;
+  margin: auto;
 `;

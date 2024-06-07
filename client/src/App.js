@@ -1,10 +1,10 @@
 import React from 'react';
+import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/common/Navbar';
 import Intro from './pages/Intro';
 import Board from './components/board/Board';
 import Mypage from './pages/Mypage';
-import './index.css';
 import Main from './pages/Main';
 
 function App() {
