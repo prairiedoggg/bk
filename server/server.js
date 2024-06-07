@@ -8,6 +8,7 @@ const app = express();
 
 const userRoutes = require("./routes/userRoutes");
 const libraryRoutes = require("./routes/libraryRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 const Library = require("./models/librarySchema");
 const Park = require("./models/parkSchema");
 
@@ -65,6 +66,7 @@ app.get("/api/park_locations", async (req, res, next) => {
 // 사용자와 도서관 라우트 설정
 app.use("/api/users", userRoutes);
 app.use("/api/libraries", libraryRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // 루트 경로로 들어오는 요청에 대해 index.html 파일을 응답합니다.
 app.get("/", (req, res) => {

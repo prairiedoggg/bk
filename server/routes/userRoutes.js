@@ -9,12 +9,9 @@ router.put("/:userId/profile", async (req, res, next) => {
     const { userId } = req.params;
     const { name, comments, pictureUrl } = req.body;
 
-    // 사용자 프로필 업데이트
     const user = await User.findByIdAndUpdate(
       userId,
-      {
-        profile: { name, comments, pictureUrl }
-      },
+      { profile: { name, comments, pictureUrl } },
       { new: true }
     );
 
@@ -44,45 +41,36 @@ router.post("/:userId/favoriteLibraries/:libraryId", async (req, res, next) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).send("유저를 찾을 수 없습니다.");
 
-    user.favoriteLibraries.push(libraryId);
-    await user.save();
-    res.status(200).send("도서관을 추가했습니다.");
+    if (!user.favoriteLibraries.includes(libraryId)) {
+      user.favoriteLibraries.push(libraryId);
+      await user.save();
+      res.status(200).send("도서관을 추가했습니다.");
+    } else {
+      res.status(400).send("이미 찜한 도서관입니다.");
+    }
   } catch (error) {
     next(error);
   }
 });
 
-// 리뷰 쓴 리스트
-router.get("/:userId/reviews", async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-    const user = await User.findById(userId).populate({
-      path: "reviews",
-      populate: { path: "library" }
-    });
-    if (!user) return res.status(404).send("유저를 찾을 수 없습니다.");
-    res.json(user.reviews);
-  } catch (error) {
-    next(error);
-  }
-});
+// 찜한 도서관 삭제
+router.delete(
+  "/:userId/favoriteLibraries/:libraryId",
+  async (req, res, next) => {
+    try {
+      const { userId, libraryId } = req.params;
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).send("유저를 찾을 수 없습니다.");
 
-// 리뷰 작성
-router.post("/:userId/reviews", async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-    const { libraryId, rating, comment } = req.body;
-    const review = new Review({
-      user: userId,
-      library: libraryId,
-      rating,
-      comment
-    });
-    await review.save();
-    res.json(review);
-  } catch (error) {
-    next(error);
+      user.favoriteLibraries = user.favoriteLibraries.filter(
+        (id) => id.toString() !== libraryId
+      );
+      await user.save();
+      res.status(200).send("도서관을 삭제했습니다.");
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 module.exports = router;
