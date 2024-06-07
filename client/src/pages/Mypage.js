@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import MypageBox from '../components/mypage/MypageBox';
 import WriteList from '../components/mypage/WriteList';
 import BookMarkList from '../components/mypage/BookMarkList';
+import ReviewList from '../components/mypage/ReviewList';
 import ProfileIcon from '../assets/icons/ProfileIcon.svg';
 import SettingIcon from '../assets/icons/SettingIcon.svg';
 import WriteListIcon from '../assets/icons/WriteListIcon.svg';
 import CommentIcon from '../assets/icons/CommentIcon.svg';
 import BookMark from '../assets/icons/BookMark.svg';
-import StarIcon from '../assets/icons/StarIcon.svg';
+import ReviewIcon from '../assets/icons/ReviewIcon.svg';
 import MapIcon from '../assets/icons/MapIcon.svg';
 
 const Mypage = () => {
@@ -49,9 +50,9 @@ const Mypage = () => {
           mapIcon={MapIcon}
         />
         <MypageBox
-          icon={StarIcon}
+          icon={ReviewIcon}
           title='작성한 리뷰'
-          component={<WriteList title='제목' date='2024-06-05' />}
+          component={<ReviewList />}
         />
       </MypageContainer>
     </Container>
