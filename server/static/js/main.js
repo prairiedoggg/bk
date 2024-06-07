@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
     locations.forEach((location) => {
       var latitude, longitude;
       if (type === "library") {
-        latitude = location["위도"] || 0;
-        longitude = location["경도"] || 0;
+        latitude = location.latitude || 0;
+        longitude = location.longitude || 0;
       } else if (type === "park") {
-        latitude = location["Y좌표(WGS84)"] || 0;
-        longitude = location["X좌표(WGS84)"] || 0;
+        latitude = location.latitude || 0;
+        longitude = location.longitude || 0;
       }
 
       var markerPosition = new kakao.maps.LatLng(latitude, longitude);
@@ -66,14 +66,14 @@ document.addEventListener("DOMContentLoaded", function () {
       if (type === "library") {
         infoContent = `
           <div class="kakao-info-window">
-            <h4>${location["도서관명"] || "정보 없음"}</h4>
-            <p>주소: ${location["주소"] || "정보 없음"}</p>
-            <p>전화번호: ${location["전화번호"] || "정보 없음"}</p>
-            <p>운영시간: ${location["운영시간"] || "정보 없음"}</p>
-            <p>정기 휴관일: ${location["정기 휴관일"] || "정보 없음"}</p>
+            <h4>${location.name || "정보 없음"}</h4>
+            <p>주소: ${location.address || "정보 없음"}</p>
+            <p>전화번호: ${location.phone || "정보 없음"}</p>
+            <p>운영시간: ${location.hours || "정보 없음"}</p>
+            <p>정기 휴관일: ${location.holidays || "정보 없음"}</p>
             ${
-              location["홈페이지 URL"]
-                ? `<a href="${location["홈페이지 URL"]}" target="_blank">홈페이지</a>`
+              location.url
+                ? `<a href="${location.url}" target="_blank">홈페이지</a>`
                 : ""
             }
           </div>
@@ -81,10 +81,9 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (type === "park") {
         infoContent = `
           <div class="kakao-info-window">
-            <h4>${location["공원명"] || "정보 없음"}</h4>
-            <p>주소: ${location["공원주소"] || "정보 없음"}</p>
-            <p>전화번호: ${location["전화번호"] || "정보 없음"}</p>
-            <p>공원소개: ${location["공원개요"] || "정보 없음"}</p>
+            <h4>${location.name || "정보 없음"}</h4>
+            <p>주소: ${location.address || "정보 없음"}</p>
+            <p>전화번호: ${location.phone || "정보 없음"}</p>
           </div>
         `;
       }
@@ -114,18 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
           if (filter && filter.district) {
             filteredData = filteredData.filter(
-              (item) =>
-                item["구명"] === filter.district ||
-                item["지역"] === filter.district
+              (item) => item.district === filter.district
             );
           }
 
           if (filter && filter.searchTerm) {
             filteredData = filteredData.filter(
-              (item) =>
-                (item["도서관명"] &&
-                  item["도서관명"].includes(filter.searchTerm)) ||
-                (item["공원명"] && item["공원명"].includes(filter.searchTerm))
+              (item) => item.name && item.name.includes(filter.searchTerm)
             );
           }
 
@@ -136,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => console.error("Error fetching data:", error));
   }
+
   // 도서관 데이터를 가져와서 표시
   function fetchAndDisplayLibraries(filter = {}) {
     fetchAndDisplayData(
@@ -151,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchAndDisplayData("/api/park_locations", parkMarkerImage, "park", filter);
   }
 
-  //구를 선택, 검색 버튼을 클릭할 때 필터링된 데이터를 가져와서 마커와 정보 창을 표시
+  // 구를 선택, 검색 버튼을 클릭할 때 필터링된 데이터를 가져와서 마커와 정보 창을 표시
   document
     .getElementById("district-select")
     .addEventListener("change", function () {
