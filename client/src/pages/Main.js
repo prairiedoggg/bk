@@ -47,7 +47,9 @@ const Main = () => {
           </>
         </Flex>
         {/* Content */}
-        <Flex flex={4}><LibraryParkMap/></Flex>
+        <Flex flex={4}>
+          <LibraryParkMap />
+        </Flex>
         {/* Content */}
       </Guide>
     </FullHeightContainer>
