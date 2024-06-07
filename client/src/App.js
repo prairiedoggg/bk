@@ -1,17 +1,23 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LibraryParkMap from './components/LibraryParkMap';
+import './App.css';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <BrowserRouter>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <h1>Library and Park Finder</h1>
+        </header>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<LibraryParkMap />} />
         </Routes>
-      </BrowserRouter>
-    </div>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
+
+
