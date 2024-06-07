@@ -14,12 +14,18 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
     "react/react-in-jsx-scope": "off",
     "spaced-comment": "warn",
     "no-duplicate-imports": "warn",
     "no-unused-vars": "warn",
     "quotes": ["warn", "single", { "avoidEscape": true }],
     "react/prop-types": "off"
+    
   }
 }
