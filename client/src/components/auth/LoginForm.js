@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import InvisibleIcon from '../../assets/icons/InvisibleIcon.svg';
 import VisibleIcon from '../../assets/icons/VisibleIcon.svg';
+import GoogleIcon from '../../assets/icons/GoogleLogo.svg';
 
 const LoginForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
@@ -36,6 +37,10 @@ const LoginForm = ({ setFormType }) => {
         </PasswordInputContainer>
       </InputContainer>
       <LoginButton>로그인</LoginButton>
+      <GoogleButton>
+        <GoogleIconImg src={GoogleIcon} alt='google-icon' />
+        Google로 시작하기
+      </GoogleButton>
       <ButtonContainer>
         <TextButton>아이디 찾기</TextButton>
         <Divider>|</Divider>
@@ -69,7 +74,7 @@ const Input = styled.input`
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px 12px 5px 12px;
-  margin-bottom: 10px;
+  margin-bottom: 7px;
 
   &::placeholder {
     color: #bababa;
@@ -89,8 +94,8 @@ const VisibilityIcon = styled.img`
 `;
 
 const LoginButton = styled.button`
-  width: 10rem;
-  height: 2.5rem;
+  width: 13rem;
+  height: 2.7rem;
   background-color: #563c0a;
   color: white;
   border-radius: 10px;
@@ -101,8 +106,30 @@ const LoginButton = styled.button`
   font-weight: 500;
 `;
 
+const GoogleButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 13rem;
+  height: 2.7rem;
+  background-color: #ffffff;
+  color: #5a5a5a;
+  border-radius: 10px;
+  border: 1px solid #d0d0d0;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+`;
+
+const GoogleIconImg = styled.img`
+  width: 1.1rem;
+  margin-right: 10px;
+`;
+
 const ButtonContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 45px;
 `;
 
 const TextButton = styled.button`
@@ -111,10 +138,10 @@ const TextButton = styled.button`
   color: #868686;
   font-size: 0.9rem;
   cursor: pointer;
-  padding: 0 8px;
+  padding: 0 6px;
 `;
 
 const Divider = styled.span`
   color: #d7d7d7;
-  margin: 0 4px;
+  margin: 0 2px;
 `;

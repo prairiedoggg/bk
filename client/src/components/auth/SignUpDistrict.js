@@ -46,6 +46,7 @@ export default SignUpDistrict;
 const DropdownContainer = styled.div`
   position: relative;
   width: 11rem;
+  margin-top: -2px;
 `;
 
 const DropdownBox = styled.div`
@@ -53,7 +54,7 @@ const DropdownBox = styled.div`
   justify-content: center;
   align-items: center;
   width: 9.5rem;
-  height: 1.6rem;
+  height: 1.4rem;
   color: #191619;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
@@ -69,6 +70,7 @@ const DropdownBox = styled.div`
 const TextContainer = styled.div`
   flex: 1;
   text-align: center;
+  font-size: 0.9rem;
 `;
 
 const IconContainer = styled.div`

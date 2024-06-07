@@ -1,30 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import closebutton from '../../assets/icons/closebutton.svg';
 
 const AuthModal = ({ title, component, onClose }) => {
+  const [modalOpen, setModalOpen] = useState(true);
   const modalElement = document.getElementById('modal');
+
+  const handleOverlayClick = () => {
+    // 클릭 이벤트 무시
+  };
 
   return (
     <>
-      {ReactDOM.createPortal(
-        <ModalContainer>
-          <Modal>
-            <CloseBtn src={closebutton} alt='close-btn' onClick={onClose} />
-            <Container>
-              <Title>{title}</Title>
-              {component}
-            </Container>
-          </Modal>
-        </ModalContainer>,
-        modalElement
-      )}
+      {modalOpen &&
+        ReactDOM.createPortal(
+          <ModalOverlay onClick={handleOverlayClick}>
+            <ModalContainer>
+              <Modal>
+                <CloseBtn src={closebutton} alt='close-btn' onClick={onClose} />
+                <Container>
+                  <Title>{title}</Title>
+                  {component}
+                </Container>
+              </Modal>
+            </ModalContainer>
+          </ModalOverlay>,
+          modalElement
+        )}
     </>
   );
 };
 
 export default AuthModal;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+`;
 
 const ModalContainer = styled.div`
   display: flex;
@@ -37,6 +55,7 @@ const ModalContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
+  border-radius: 8px;
 `;
 
 const Modal = styled.div`
@@ -47,8 +66,8 @@ const Modal = styled.div`
   border: 1px solid #ececec;
   border-radius: 8px;
   box-shadow: 0px 3px 18px rgba(0, 0, 0, 0.06);
-  height: 33rem;
-  width: 35rem;
+  height: 40rem;
+  width: 38rem;
   padding: 20px;
   position: relative;
 `;

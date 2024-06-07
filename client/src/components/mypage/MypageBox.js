@@ -23,8 +23,8 @@ export default MypageBox;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid #ececec;
-  border-radius: 7px;
+  border-top: 8px solid #efefef;
+  border-radius: 5px;
   box-shadow: 0px 3px 18px rgba(0, 0, 0, 0.04);
   width: 39rem;
   height: 24rem;
