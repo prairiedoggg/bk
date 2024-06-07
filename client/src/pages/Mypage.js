@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import MypageBox from '../components/mypage/MypageBox';
+import AuthModalController from '../components/auth/AuthModalController';
 import WriteList from '../components/mypage/WriteList';
 import BookMarkList from '../components/mypage/BookMarkList';
 import ReviewList from '../components/mypage/ReviewList';
@@ -16,6 +17,17 @@ const Mypage = () => {
   const [name, setName] = useState('이름');
   const [email, setEmail] = useState('aaa@naver.com');
   const [description, setDescription] = useState('내용을 추가하세요.');
+  const [showModal, setShowModal] = useState(false);
+  const [initialFormType, setInitialFormType] = useState('로그인');
+
+  const handleSettingClick = () => {
+    setInitialFormType('기본 정보 수정');
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   return (
     <Container>
@@ -24,8 +36,11 @@ const Mypage = () => {
         <UserName>{name}</UserName>
         <UserEmail>{email}</UserEmail>
         <UserDescription>{description}</UserDescription>
-        <EditBtn>Edit</EditBtn>
-        <SettingBtn src={SettingIcon} alt='setting'></SettingBtn>
+        <SettingBtn
+          src={SettingIcon}
+          alt='setting'
+          onClick={handleSettingClick}
+        ></SettingBtn>
       </ProfileConatiner>
       <MypageContainer>
         <MypageBox
@@ -55,6 +70,12 @@ const Mypage = () => {
           component={<ReviewList />}
         />
       </MypageContainer>
+      {showModal && (
+        <AuthModalController
+          onClose={handleCloseModal}
+          initialFormType={initialFormType}
+        />
+      )}
     </Container>
   );
 };
@@ -99,19 +120,6 @@ const UserDescription = styled.p`
   font-size: 1.1rem;
   color: #191619;
   margin-top: 35px;
-`;
-
-const EditBtn = styled.button`
-  font-size: 0.9;
-  font-weight: 500;
-  color: white;
-  width: 3.3rem;
-  margin-top: 30px;
-  padding: 5px 10px 5px 10px;
-  border: none;
-  border-radius: 20px;
-  background-color: #563c0a;
-  cursor: pointer;
 `;
 
 const SettingBtn = styled.img`

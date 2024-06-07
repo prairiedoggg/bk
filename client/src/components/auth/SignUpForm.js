@@ -95,7 +95,7 @@ const SignUpForm = ({ setFormType }) => {
           </BottomBox>
           <BottomBox>
             <Label>기본 위치 설정</Label>
-            <SignUpDistrict options={Districts} />
+            <SignUpDistrict options={Districts} location='서울특별시' />
           </BottomBox>
         </BottomInputBox>
       </InputContainer>
@@ -154,7 +154,7 @@ const Input = styled.input`
 
 const NameInput = styled.input`
   width: 10rem;
-  height: 1.8rem;
+  height: 1.7rem;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px 12px 5px 12px;

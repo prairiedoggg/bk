@@ -21,7 +21,7 @@ const AuthModal = ({ title, component, onClose }) => {
                 <CloseBtn src={closebutton} alt='close-btn' onClick={onClose} />
                 <Container>
                   <Title>{title}</Title>
-                  {component}
+                  <ContentWrapper>{component}</ContentWrapper>
                 </Container>
               </Modal>
             </ModalContainer>
@@ -56,6 +56,7 @@ const ModalContainer = styled.div`
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 8px;
+  overflow: hidden;
 `;
 
 const Modal = styled.div`
@@ -66,10 +67,22 @@ const Modal = styled.div`
   border: 1px solid #ececec;
   border-radius: 8px;
   box-shadow: 0px 3px 18px rgba(0, 0, 0, 0.06);
-  height: 40rem;
   width: 38rem;
-  padding: 20px;
+  padding: 70px 30px;
   position: relative;
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  max-height: 100%;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  margin-top: 20px;
 `;
 
 const CloseBtn = styled.img`
@@ -86,11 +99,11 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   background-color: white;
+  overflow: auto;
 `;
 
 const Title = styled.div`
   font-size: 1.4rem;
   font-weight: 600;
   color: #191619;
-  margin-bottom: 30px;
 `;
