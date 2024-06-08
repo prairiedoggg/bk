@@ -6,9 +6,12 @@ const path = require("path");
 
 const app = express();
 
-const userRoutes = require("./routes/userRoutes");
+const mypageRoutes = require("./routes/mypageRoutes");
 const libraryRoutes = require("./routes/libraryRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const libraryLocationRoutes = require("./routes/libraryLocationRoutes");
+const parkLocationRoutes = require("./routes/parkLocationRoutes");
+const errorHandler = require("./middlewares/errorHandler");
 const Library = require("./models/librarySchema");
 const Park = require("./models/parkSchema");
 
@@ -36,38 +39,12 @@ app.use(bodyParser.json());
 app.use("/static", express.static(path.join(__dirname, "static")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// 도서관 위치 데이터를 반환하는 엔드포인트
-app.get("/api/library_locations", async (req, res, next) => {
-  try {
-    // 도서관 정보를 조회하고 일부 필드를 선택
-    const data = await Library.find().select(
-      "-_id name district address phone url hours holidays latitude longitude"
-    );
-    res.json(data);
-  } catch (error) {
-    console.error(`Error fetching data: ${error}`);
-    next(error);
-  }
-});
-
-// 공원 위치 데이터를 반환하는 엔드포인트
-app.get("/api/park_locations", async (req, res, next) => {
-  try {
-    // 공원 정보를 조회하고 일부 필드를 선택
-    const data = await Park.find().select(
-      "-_id name district address managing_department phone latitude longitude"
-    );
-    res.json(data);
-  } catch (error) {
-    console.error(`Error fetching data: ${error}`);
-    next(error);
-  }
-});
-
-// 사용자와 도서관 라우트 설정
-app.use("/api/users", userRoutes);
+// 라우트 설정
+app.use("/api/mypage", mypageRoutes);
 app.use("/api/libraries", libraryRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/library_locations", libraryLocationRoutes);
+app.use("/api/park_locations", parkLocationRoutes);
 
 // 루트 경로로 들어오는 요청에 대해 index.html 파일을 응답
 app.get("/", (req, res) => {
@@ -75,10 +52,7 @@ app.get("/", (req, res) => {
 });
 
 // 에러 핸들링 미들웨어
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send({ error: err.message });
-});
+app.use(errorHandler);
 
 // 서버 시작
 const PORT = process.env.PORT || 3001;
