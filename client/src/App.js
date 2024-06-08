@@ -7,7 +7,7 @@ import Board from './components/board/Board';
 import Mypage from './pages/Mypage';
 import Main from './pages/Main';
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <div className='App'>
@@ -21,6 +21,6 @@ function App() {
       </div>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
