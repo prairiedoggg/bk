@@ -3,11 +3,26 @@ import styled from 'styled-components';
 import InvisibleIcon from '../../assets/icons/InvisibleIcon.svg';
 import VisibleIcon from '../../assets/icons/VisibleIcon.svg';
 import GoogleIcon from '../../assets/icons/GoogleLogo.svg';
+import { postLogin } from '../../api/Auth';
 
 const LoginForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const handleLogin = async () => {
+    const data = {
+      email: email,
+      password: password
+    };
+
+    try {
+      const response = await postLogin(data);
+      console.log('로그인 성공:', response);
+    } catch (error) {
+      console.error('로그인 실패:', error);
+    }
+  };
 
   return (
     <>
@@ -36,7 +51,7 @@ const LoginForm = ({ setFormType }) => {
           />
         </PasswordInputContainer>
       </InputContainer>
-      <LoginButton>로그인</LoginButton>
+      <LoginButton onClick={handleLogin}>로그인</LoginButton>
       <GoogleButton>
         <GoogleIconImg src={GoogleIcon} alt='google-icon' />
         Google로 시작하기

@@ -3,8 +3,12 @@ import styled from 'styled-components';
 import DropDown from '../../assets/icons/DropDown.svg';
 import UpIcon from '../../assets/icons/UpIcon.svg';
 
-const SignUpDistrict = ({ options, location }) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+const SignUpDistrict = ({
+  options,
+  location,
+  selectedOption,
+  setSelectedOption
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [defaultText, setDefaultTExt] = useState(location);
 

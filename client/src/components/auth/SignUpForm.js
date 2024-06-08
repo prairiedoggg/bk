@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import SignUpDistrict from './SignUpDistrict';
 import Districts from './Districts';
 import GoogleIcon from '../../assets/icons/GoogleLogo.svg';
+import { postSignup } from '../../api/Auth';
 
 const SignUpForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ const SignUpForm = ({ setFormType }) => {
   const [checkPassword, setCheckPassword] = useState('');
   const [foundAnswer, setFoundAnswer] = useState('');
   const [name, setName] = useState('');
+  const [region, setRegion] = useState('');
   const [checkEmailText, setCheckEmailText] = useState('');
   const [checkPasswordText, setCheckPasswordText] = useState('');
 
@@ -32,6 +34,25 @@ const SignUpForm = ({ setFormType }) => {
       return;
     } else {
       setCheckPasswordText('');
+    }
+  };
+
+  const handleSignup = async () => {
+    const data = {
+      name,
+      email,
+      password,
+      region,
+      favoriteAuthor: foundAnswer
+    };
+
+    try {
+      const res = await postSignup(data);
+      console.log('회원가입 완료', res);
+      // Handle success
+    } catch (error) {
+      console.error('회원가입 오류:', error);
+      // Handle error
     }
   };
 
@@ -95,11 +116,16 @@ const SignUpForm = ({ setFormType }) => {
           </BottomBox>
           <BottomBox>
             <Label>기본 위치 설정</Label>
-            <SignUpDistrict options={Districts} location='서울특별시' />
+            <SignUpDistrict
+              options={Districts}
+              location='서울특별시'
+              selectedOption={region}
+              setSelectedOption={setRegion}
+            />
           </BottomBox>
         </BottomInputBox>
       </InputContainer>
-      <SignUpButton>회원가입</SignUpButton>
+      <SignUpButton onClick={handleSignup}>회원가입</SignUpButton>
       <GoogleButton>
         <GoogleIconImg src={GoogleIcon} alt='google-icon' />
         Google로 시작하기
