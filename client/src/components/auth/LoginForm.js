@@ -3,24 +3,36 @@ import styled from 'styled-components';
 import InvisibleIcon from '../../assets/icons/InvisibleIcon.svg';
 import VisibleIcon from '../../assets/icons/VisibleIcon.svg';
 import GoogleIcon from '../../assets/icons/GoogleLogo.svg';
-import { postLogin } from '../../api/Auth';
+import { postLogin, getGoogleLogin } from '../../api/Auth';
 
 const LoginForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
   const handleLogin = async () => {
     const data = {
       email: email,
       password: password
     };
-
     try {
       const response = await postLogin(data);
       console.log('로그인 성공:', response);
+      localStorage.setItem('로그인', true);
+      window.location.reload();
     } catch (error) {
       console.error('로그인 실패:', error);
+      setLoginError('아이디 또는 비밀번호가 일치하지 않습니다.');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await getGoogleLogin();
+      console.log('구글 로그인 성공:');
+    } catch (error) {
+      console.error('구글 로그인 실패:', error);
     }
   };
 
@@ -50,9 +62,10 @@ const LoginForm = ({ setFormType }) => {
             onClick={() => setIsPasswordVisible(!isPasswordVisible)}
           />
         </PasswordInputContainer>
+        {loginError && <ErrorText>{loginError}</ErrorText>}
       </InputContainer>
       <LoginButton onClick={handleLogin}>로그인</LoginButton>
-      <GoogleButton>
+      <GoogleButton onClick={handleGoogleLogin}>
         <GoogleIconImg src={GoogleIcon} alt='google-icon' />
         Google로 시작하기
       </GoogleButton>
@@ -106,6 +119,13 @@ const VisibilityIcon = styled.img`
   top: 1rem;
   width: 1.2rem;
   cursor: pointer;
+`;
+
+const ErrorText = styled.p`
+  font-size: 0.9rem;
+  color: #ca3636;
+  align-self: center;
+  margin-bottom: -10px;
 `;
 
 const LoginButton = styled.button`

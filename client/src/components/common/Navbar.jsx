@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as LogoSVG } from '../../assets/icons/Logo.svg';
 import AuthModalController from '../auth/AuthModalController';
 
@@ -15,6 +15,13 @@ function Button({ children, isActive, onClick }) {
 function Navbar() {
   const [activeButton, setActiveButton] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loginStatus = localStorage.getItem('로그인');
+    setIsLoggedIn(loginStatus === 'true');
+  }, []);
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
@@ -28,6 +35,12 @@ function Navbar() {
 
   const handleLoginClick = () => {
     setShowModal(true);
+  };
+
+  const handleLogoutClick = () => {
+    localStorage.removeItem('로그인');
+    setIsLoggedIn(false);
+    navigate('/');
   };
 
   const handleCloseModal = () => {
@@ -68,7 +81,11 @@ function Navbar() {
               </Button>
             </Link>
 
-            <Button onClick={handleLoginClick}>로그인</Button>
+            {isLoggedIn ? (
+              <Button onClick={handleLogoutClick}>로그아웃</Button>
+            ) : (
+              <Button onClick={handleLoginClick}>로그인</Button>
+            )}
           </ButtonContainer>
         </NavbarContainer>
       </NavbarWrapper>

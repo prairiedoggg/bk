@@ -12,6 +12,26 @@ export const postSignup = async (data) => {
   }
 };
 
+export const getGoogleLogin = async () => {
+  try {
+    await axios.get(`${baseURL}/auth/google`);
+    console.log('구글 로그인 완료');
+  } catch (error) {
+    console.error('구글 로그인 오류:', error);
+    throw error;
+  }
+};
+
+export const getGoogleSignup = async () => {
+  try {
+    await axios.get(`${baseURL}/auth/google/callback`);
+    console.log('구글 회원가입 완료');
+  } catch (error) {
+    console.error('구글 회원가입 오류:', error);
+    throw error;
+  }
+};
+
 export const postLogin = async (data) => {
   try {
     const res = await axios.post(`${baseURL}/auth/login`, data);

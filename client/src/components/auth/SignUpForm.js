@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SignUpDistrict from './SignUpDistrict';
 import Districts from './Districts';
 import GoogleIcon from '../../assets/icons/GoogleLogo.svg';
-import { postSignup } from '../../api/Auth';
+import { postSignup, getGoogleSignup } from '../../api/Auth';
 
 const SignUpForm = ({ setFormType }) => {
   const [email, setEmail] = useState('');
@@ -14,6 +14,7 @@ const SignUpForm = ({ setFormType }) => {
   const [region, setRegion] = useState('');
   const [checkEmailText, setCheckEmailText] = useState('');
   const [checkPasswordText, setCheckPasswordText] = useState('');
+  const [signupError, setSignupError] = useState('');
 
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
@@ -49,10 +50,19 @@ const SignUpForm = ({ setFormType }) => {
     try {
       const res = await postSignup(data);
       console.log('회원가입 완료', res);
-      // Handle success
+      window.location.reload();
     } catch (error) {
       console.error('회원가입 오류:', error);
-      // Handle error
+      setSignupError('모두 입력해 주세요.');
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    try {
+      await getGoogleSignup();
+      console.log('구글 회원가입 완료');
+    } catch (error) {
+      console.error('구글 회원가입 오류:', error);
     }
   };
 
@@ -124,9 +134,10 @@ const SignUpForm = ({ setFormType }) => {
             />
           </BottomBox>
         </BottomInputBox>
+        {signupError && <ErrorText>{signupError}</ErrorText>}
       </InputContainer>
       <SignUpButton onClick={handleSignup}>회원가입</SignUpButton>
-      <GoogleButton>
+      <GoogleButton onClick={handleGoogleSignup}>
         <GoogleIconImg src={GoogleIcon} alt='google-icon' />
         Google로 시작하기
       </GoogleButton>
@@ -185,6 +196,13 @@ const NameInput = styled.input`
   border-radius: 8px;
   padding: 5px 12px 5px 12px;
   margin: -2px 10px 5px 0px;
+`;
+
+const ErrorText = styled.p`
+  font-size: 0.9rem;
+  color: #ca3636;
+  align-self: center;
+  margin: 20px 0px -5px 0px;
 `;
 
 const SignUpButton = styled.button`

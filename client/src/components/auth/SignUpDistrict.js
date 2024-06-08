@@ -10,7 +10,7 @@ const SignUpDistrict = ({
   setSelectedOption
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [defaultText, setDefaultTExt] = useState(location);
+  const [defaultText, setDefaultText] = useState(location);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
