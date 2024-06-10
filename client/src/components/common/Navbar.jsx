@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ReactComponent as LogoSVG } from '../../assets/icons/Logo.svg';
 import AuthModal from '../auth/AuthModal';
 import { getLogout } from '../../api/Auth';
@@ -16,12 +16,12 @@ function Button({ children, isActive, onClick }) {
 function Navbar() {
   const [activeButton, setActiveButton] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem('userId')
+  );
 
   useEffect(() => {
-    const loginStatus = localStorage.getItem('로그인');
-    setIsLoggedIn(loginStatus === 'true');
+    setIsLoggedIn(!!localStorage.getItem('userId'));
   }, []);
 
   const handleButtonClick = (buttonName) => {
@@ -42,7 +42,8 @@ function Navbar() {
   //   try {
   //     await getLogout();
   //     setIsLoggedIn(false);
-  //     navigate('/');
+  //     localStorage.removeItem('userId');
+  //     window.location.href = '/';
   //   } catch (error) {
   //     console.error('로그아웃 오류:', error);
   //   }
@@ -50,7 +51,8 @@ function Navbar() {
 
   const handleLogoutClick = () => {
     setIsLoggedIn(false);
-    navigate('/');
+    localStorage.removeItem('userId');
+    window.location.href = '/';
   };
 
   const handleCloseModal = () => {

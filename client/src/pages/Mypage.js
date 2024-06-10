@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import MypageBox from '../components/mypage/MypageBox';
@@ -29,6 +29,11 @@ const Mypage = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  useEffect(() => {
+    const user = localStorage.getItem('userId');
+    console.log(user);
+  }, []);
 
   return (
     <Container>
