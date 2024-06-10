@@ -4,6 +4,7 @@ import FindLibrary from '../../src/assets/icons/FindLibrary.svg';
 import styled from 'styled-components';
 import InvisibleIcon from '../../src/assets/icons/InvisibleIcon.svg';
 import VisibleIcon from '../../src/assets/icons/VisibleIcon.svg';
+import LibraryParkMap from '../components/LibraryParkMap';
 
 const Main = () => {
   const [keyword, setKeyword] = useState('');
@@ -46,7 +47,9 @@ const Main = () => {
           </>
         </Flex>
         {/* Content */}
-        <Flex flex={4}>지도 들어감</Flex>
+        <Flex flex={4}>
+          <LibraryParkMap />
+        </Flex>
         {/* Content */}
       </Guide>
     </FullHeightContainer>
