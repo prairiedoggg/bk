@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DefaultModal from '../common/DefaultModal';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+
 import FindEmailForm from './FindEmailForm';
 import FindPasswordForm from './FindPasswordForm';
 
@@ -10,7 +11,8 @@ const AuthFunnel = {
   SIGNUP: '회원가입',
   EDIT: '기본 정보 수정',
   FINDID: '아이디 찾기',
-  FINDPW: '비밀번호 찾기'
+  FINDPW: '비밀번호 찾기',
+  CHANGEPW: '비밀번호 변경'
 };
 
 const AuthModal = ({ onClose, initialFormType }) => {
@@ -22,7 +24,6 @@ const AuthModal = ({ onClose, initialFormType }) => {
         return <LoginForm setFormType={setFormType} />;
       case AuthFunnel.SIGNUP:
         return <SignUpForm setFormType={setFormType} />;
-
       case AuthFunnel.FINDID:
         return <FindEmailForm setFormType={setFormType} />;
       case AuthFunnel.FINDPW:
