@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import InvisibleIcon from '../../assets/icons/InvisibleIcon.svg';
 import VisibleIcon from '../../assets/icons/VisibleIcon.svg';
 import GoogleIcon from '../../assets/icons/GoogleLogo.svg';
+import { InputComponent } from '../common/InputComponent';
 import { postLogin, getGoogleLogin } from '../../api/Auth';
 
 const LoginForm = ({ setFormType }) => {
@@ -19,8 +20,6 @@ const LoginForm = ({ setFormType }) => {
     try {
       const response = await postLogin(data);
       console.log('로그인 성공:', response);
-      localStorage.setItem('로그인', true);
-      window.location.reload();
     } catch (error) {
       console.error('로그인 실패:', error);
       setLoginError('아이디 또는 비밀번호가 일치하지 않습니다.');
@@ -38,15 +37,14 @@ const LoginForm = ({ setFormType }) => {
 
   return (
     <>
+      <InputComponent
+        title='이메일'
+        type='email'
+        placeholder='이메일 입력'
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
       <InputContainer>
-        <Label>이메일</Label>
-        <Input
-          label='이메일'
-          type='email'
-          placeholder='이메일 입력'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
         <Label>비밀번호</Label>
         <PasswordInputContainer>
           <Input
@@ -72,7 +70,9 @@ const LoginForm = ({ setFormType }) => {
       <ButtonContainer>
         <TextButton>아이디 찾기</TextButton>
         <Divider>|</Divider>
-        <TextButton>비밀번호 찾기</TextButton>
+        <TextButton onClick={() => setFormType('비밀번호 찾기')}>
+          비밀번호 찾기
+        </TextButton>
         <Divider>|</Divider>
         <TextButton onClick={() => setFormType('회원가입')}>
           회원가입

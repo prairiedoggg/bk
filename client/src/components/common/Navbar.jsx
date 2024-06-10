@@ -3,6 +3,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as LogoSVG } from '../../assets/icons/Logo.svg';
 import AuthModalController from '../auth/AuthModalController';
+import { getLogout } from '../../api/Auth';
 
 function Button({ children, isActive, onClick }) {
   return (
@@ -37,8 +38,17 @@ function Navbar() {
     setShowModal(true);
   };
 
+  // const handleLogoutClick = async () => {
+  //   try {
+  //     await getLogout();
+  //     setIsLoggedIn(false);
+  //     navigate('/');
+  //   } catch (error) {
+  //     console.error('로그아웃 오류:', error);
+  //   }
+  // };
+
   const handleLogoutClick = () => {
-    localStorage.removeItem('로그인');
     setIsLoggedIn(false);
     navigate('/');
   };
