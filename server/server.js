@@ -9,6 +9,7 @@ const app = express();
 const mypageRoutes = require("./routes/mypageRoutes");
 const libraryRoutes = require("./routes/libraryRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const postRoutes = require("./routes/postRoutes");
 const libraryLocationRoutes = require("./routes/libraryLocationRoutes");
 const parkLocationRoutes = require("./routes/parkLocationRoutes");
 const errorHandler = require("./middlewares/errorHandler");
@@ -43,6 +44,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/mypage", mypageRoutes);
 app.use("/api/libraries", libraryRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/posts", postRoutes);
 app.use("/api/library_locations", libraryLocationRoutes);
 app.use("/api/park_locations", parkLocationRoutes);
 

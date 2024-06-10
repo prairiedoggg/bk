@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Review = require("../models/reviewSchema");
+const Library = require("../models/librarySchema");
 
 // 리뷰 목록 조회
 router.get("/", async (req, res, next) => {
@@ -36,6 +37,14 @@ router.post("/", async (req, res, next) => {
     });
 
     await review.save();
+
+    // 도서관의 평균 별점 업데이트
+    const reviews = await Review.find({ library: libraryId });
+    const averageRating =
+      reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+
+    await Library.findByIdAndUpdate(libraryId, { averageRating });
+
     res.json(review);
   } catch (error) {
     next(error);
@@ -46,8 +55,23 @@ router.post("/", async (req, res, next) => {
 router.delete("/:reviewId", async (req, res, next) => {
   try {
     const { reviewId } = req.params;
-    await Review.findByIdAndDelete(reviewId);
-    res.status(200).send("리뷰를 삭제했습니다.");
+    const review = await Review.findById(reviewId);
+
+    if (review) {
+      await review.remove();
+
+      // 도서관의 평균 별점 업데이트
+      const reviews = await Review.find({ library: review.library });
+      const averageRating =
+        reviews.reduce((sum, review) => sum + review.rating, 0) /
+        reviews.length;
+
+      await Library.findByIdAndUpdate(review.library, { averageRating });
+
+      res.status(200).send("리뷰를 삭제했습니다.");
+    } else {
+      res.status(404).send("리뷰를 찾을 수 없습니다.");
+    }
   } catch (error) {
     next(error);
   }
