@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import InvisibleIcon from '../../assets/icons/InvisibleIcon.svg';
 import VisibleIcon from '../../assets/icons/VisibleIcon.svg';
 import GoogleIcon from '../../assets/icons/GoogleLogo.svg';
-import { InputComponent } from '../common/InputComponent';
+import { LongInput } from '../common/LongInput';
 import { postLogin, getGoogleLogin } from '../../api/Auth';
 
 const LoginForm = ({ setFormType }) => {
@@ -37,38 +37,37 @@ const LoginForm = ({ setFormType }) => {
 
   return (
     <>
-      <InputComponent
+      <LongInput
         title='이메일'
         type='email'
         placeholder='이메일 입력'
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <InputContainer>
-        <Label>비밀번호</Label>
-        <PasswordInputContainer>
-          <Input
-            label='비밀번호'
-            type={isPasswordVisible ? 'text' : 'password'}
-            placeholder='비밀번호 입력'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <VisibilityIcon
-            src={isPasswordVisible ? VisibleIcon : InvisibleIcon}
-            alt='PasswordVisibility'
-            onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-          />
-        </PasswordInputContainer>
-        {loginError && <ErrorText>{loginError}</ErrorText>}
-      </InputContainer>
+      <PasswordInputContainer>
+        <LongInput
+          title='비밀번호'
+          type={isPasswordVisible ? 'text' : 'password'}
+          placeholder='비밀번호 입력'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <VisibilityIcon
+          src={isPasswordVisible ? VisibleIcon : InvisibleIcon}
+          alt='PasswordVisibility'
+          onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+        />
+      </PasswordInputContainer>
+      {loginError && <ErrorText>{loginError}</ErrorText>}
       <LoginButton onClick={handleLogin}>로그인</LoginButton>
       <GoogleButton onClick={handleGoogleLogin}>
         <GoogleIconImg src={GoogleIcon} alt='google-icon' />
         Google로 시작하기
       </GoogleButton>
       <ButtonContainer>
-        <TextButton>아이디 찾기</TextButton>
+        <TextButton onClick={() => setFormType('아이디 찾기')}>
+          아이디 찾기
+        </TextButton>
         <Divider>|</Divider>
         <TextButton onClick={() => setFormType('비밀번호 찾기')}>
           비밀번호 찾기
@@ -84,31 +83,6 @@ const LoginForm = ({ setFormType }) => {
 
 export default LoginForm;
 
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
-const Label = styled.p`
-  font-size: 0.9rem;
-  color: #191619;
-  margin-bottom: 6px;
-`;
-
-const Input = styled.input`
-  width: 22rem;
-  height: 2.1rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  padding: 5px 12px 5px 12px;
-  margin-bottom: 7px;
-
-  &::placeholder {
-    color: #bababa;
-  }
-`;
-
 const PasswordInputContainer = styled.div`
   position: relative;
 `;
@@ -116,7 +90,7 @@ const PasswordInputContainer = styled.div`
 const VisibilityIcon = styled.img`
   position: absolute;
   right: 1rem;
-  top: 1rem;
+  top: 2.8rem;
   width: 1.2rem;
   cursor: pointer;
 `;

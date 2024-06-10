@@ -23,6 +23,7 @@ const SignUpDistrict = ({
 
   return (
     <DropdownContainer>
+      <Label>기본 위치 설정</Label>
       <DropdownBox onClick={toggleDropdown}>
         <TextContainer>{selectedOption || defaultText}</TextContainer>
         <IconContainer>
@@ -50,16 +51,22 @@ export default SignUpDistrict;
 
 const DropdownContainer = styled.div`
   position: relative;
-  width: 11rem;
-  margin-top: -2px;
+  width: 9rem;
+  margin-top: -6px;
+`;
+
+const Label = styled.p`
+  font-size: 0.9rem;
+  color: #191619;
+  margin-bottom: 3px;
 `;
 
 const DropdownBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 9.5rem;
-  height: 1.3rem;
+  width: 8.5rem;
+  height: 1.4rem;
   color: #191619;
   border: 1px solid #d0d0d0;
   border-radius: 8px;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { LongInput } from '../common/LongInput';
 import { postFindPassword } from '../../api/Auth';
 
 const FindPasswordForm = ({ setFormType }) => {
@@ -8,23 +9,30 @@ const FindPasswordForm = ({ setFormType }) => {
 
   const handleFindPassword = async () => {
     const data = {
-      email: email
+      email
     };
     try {
       const response = await postFindPassword(data);
       console.log('비밀번호 찾기 성공', response);
+      setEmailError('임시 비밀번호가 전송되었습니다.');
     } catch (error) {
       console.error('비밀번호 찾기 실패:', error);
-      setEmailError('가입되지 않은 이메일입니다.');
+      const status = error.response?.status;
+      if (status === 404) {
+        setEmailError('가입되지 않은 이메일입니다.');
+      } else if (status === 400) {
+        setEmailError('소셜 로그인 회원입니다.');
+      } else {
+        console.error('비밀번호 찾기 실패:', error);
+      }
     }
   };
 
   return (
     <>
       <InputContainer>
-        <Label>이메일</Label>
-        <Input
-          label='이메일'
+        <LongInput
+          title='이메일'
           type='email'
           placeholder='이메일 입력'
           value={email}
@@ -47,26 +55,7 @@ export default FindPasswordForm;
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: -10px;
-`;
-
-const Label = styled.p`
-  font-size: 0.9rem;
-  color: #191619;
-  margin: 45px 0px 6px 0px;
-`;
-
-const Input = styled.input`
-  width: 22rem;
-  height: 2.1rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  padding: 5px 12px 5px 12px;
-  margin-bottom: 7px;
-
-  &::placeholder {
-    color: #bababa;
-  }
+  margin-top: 20px;
 `;
 
 const TextButton = styled.button`
