@@ -10,7 +10,6 @@ const Modal = ({ isOpen, closeModal, library }) => {
   const [archiveAdded, setArchiveAdded] = useState(false);
 
   const handleArchiveButtonClick = () => {
-    // 현재 상태의 반대로 변경
     setArchiveAdded(!archiveAdded);
   };
 
@@ -24,11 +23,11 @@ const Modal = ({ isOpen, closeModal, library }) => {
         </CloseButton>
         <LibraryNameContainer>
           <LibraryIcon src={BookIcon} alt='BookIcon' />
-          <LibraryName>{library['도서관명']}</LibraryName>
-          <DistrictName>{library['구명']}</DistrictName>
+          <LibraryName>{library.name || '도서관 이름 없음'}</LibraryName>
+          <DistrictName>{library.district || '구 이름 없음'}</DistrictName>
         </LibraryNameContainer>
         <LibraryAddress>
-          {library['주소']}
+          {library.address || '주소 없음'}
           <ArchiveAddButton onClick={handleArchiveButtonClick}>
             <img
               src={archiveAdded ? ArchiveAddedIconSrc : ArchiveAddIconSrc}
@@ -38,15 +37,15 @@ const Modal = ({ isOpen, closeModal, library }) => {
         </LibraryAddress>
         <LibraryOperatingHours>
           <OperatingHoursLabel>운영시간</OperatingHoursLabel>
-          {library['운영시간']}
+          {library.hours || '운영시간 정보 없음'}
         </LibraryOperatingHours>
-        <LibraryPhone>{library['전화번호']}</LibraryPhone>
+        <LibraryPhone>{library.phone || '전화번호 없음'}</LibraryPhone>
         <LibraryURL
-          href={library['홈페이지 URL']}
+          href={library.url || '#'}
           target='_blank'
           rel='noopener noreferrer'
         >
-          {library['홈페이지 URL']}
+          {library.url || '홈페이지 URL 없음'}
         </LibraryURL>
         <ModalReviewContainer rating={4} /> {/* ReviewContainer를 사용 */}
       </ModalContent>
@@ -155,12 +154,14 @@ const LibraryOperatingHours = styled.div`
   line-height: 18px;
   color: #191619;
   display: flex;
+  text-align: left;
   align-items: center;
 `;
 
 const OperatingHoursLabel = styled.span`
   font-weight: bold;
   margin-right: 5px;
+  text-align: left;
 `;
 
 const LibraryPhone = styled.p`

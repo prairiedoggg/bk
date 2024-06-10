@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Papa from 'papaparse';
 import styled from 'styled-components';
-import LibraryData from '../../src/assets/data/Libraries.csv';
 import FindLibrary from '../../src/assets/icons/FindLibrary.svg';
 import LibraryPing from '../../src/assets/icons/LibraryPing.svg';
 import LibraryParkMap from '../components/main/LibraryParkMap';
@@ -10,17 +8,25 @@ import DetailModal from '../../src/components/main/DetailModal';
 const Main = () => {
   const [keyword, setKeyword] = useState('');
   const [libraries, setLibraries] = useState([]);
-  const [selectedLibrary, setSelectedLibrary] = useState(null); // 선택된 도서관 상태
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태
+  const [parks, setParks] = useState([]);
+  const [selectedLibrary, setSelectedLibrary] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    fetch(LibraryData)
-      .then((response) => response.text())
-      .then((csvText) => {
-        const parsedData = Papa.parse(csvText, { header: true });
-        setLibraries(parsedData.data);
-      });
-  }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 실행
+    fetch('/api/libraries')
+      .then((response) => response.json())
+      .then((data) => {
+        setLibraries(data);
+      })
+      .catch((error) => console.error('Error fetching libraries:', error));
+
+    fetch('/api/parks')
+      .then((response) => response.json())
+      .then((data) => {
+        setParks(data);
+      })
+      .catch((error) => console.error('Error fetching parks:', error));
+  }, []);
 
   const handleFindLibraryClick = () => {
     console.log(keyword);
@@ -31,10 +37,17 @@ const Main = () => {
       console.log(keyword);
     }
   };
+
   const filterLibraries = (libraries, keyword) => {
-    return libraries.filter((library) => library['도서관명'].includes(keyword));
+    return libraries.filter((library) => library.name.includes(keyword));
   };
+
   const handleLibraryItemClick = (library) => {
+    setSelectedLibrary(library);
+    setIsModalOpen(true);
+  };
+
+  const handleMarkerClick = (library) => {
     setSelectedLibrary(library);
     setIsModalOpen(true);
   };
@@ -42,7 +55,6 @@ const Main = () => {
   return (
     <FullHeightContainer>
       <Guide as={HBox}>
-        {/* Container */}
         <Flex flex={1}>
           <>
             <InputContainer>
@@ -73,8 +85,8 @@ const Main = () => {
                   >
                     <LibraryIcon src={LibraryPing} alt='LibraryPing' />
                     <LibraryInfo>
-                      <LibraryName>{library['도서관명']}</LibraryName>
-                      <LibraryAddress>{library['주소']}</LibraryAddress>
+                      <LibraryName>{library.name}</LibraryName>
+                      <LibraryAddress>{library.address}</LibraryAddress>
                     </LibraryInfo>
                   </LibraryListItem>
                 ))}
@@ -82,13 +94,16 @@ const Main = () => {
             </LibraryListContainer>
           </>
         </Flex>
-        {/* Content */}
         <Flex flex={4}>
           <LibraryParkMapContainer>
-            <LibraryParkMap libraries={libraries} keyword={keyword} />
+            <LibraryParkMap
+              libraries={libraries}
+              parks={parks}
+              searchTerm={keyword}
+              onLibraryClick={handleMarkerClick}
+            />
           </LibraryParkMapContainer>
         </Flex>
-        {/* Content */}
       </Guide>
       <DetailModal
         isOpen={isModalOpen}
@@ -98,22 +113,23 @@ const Main = () => {
     </FullHeightContainer>
   );
 };
+
 export default Main;
 
 const LibraryParkMapContainer = styled.div`
   position: relative;
-  z-index: 0; /* 모달의 z-index 값보다 낮아야 합니다. */
+  z-index: 0;
 `;
 
 const FullHeightContainer = styled.div`
-  height: 100vh; /* 화면 전체 높이 */
+  height: 100vh;
   display: flex;
   flex-direction: column;
 `;
 
 const HBox = styled.div`
   display: flex;
-  flex-direction: row; /* 가로로 배치 */
+  flex-direction: row;
   align-items: stretch;
   flex: 1;
 `;
@@ -184,7 +200,7 @@ const Label = styled.span`
 const LibraryListContainer = styled.div`
   flex: 1;
   overflow-y: auto;
-  max-height: 60vh; /* 화면의 60% 높이로 제한 */
+  max-height: 60vh;
 `;
 
 const LibraryList = styled.ul`
@@ -196,8 +212,8 @@ const LibraryListItem = styled.li`
   display: flex;
   align-items: center;
   padding-bottom: 20px;
-  margin-bottom: 20px; /* 여유로운 margin 추가 */
-  border-bottom: 0.5px solid #dfdfdf; /* Line 7 */
+  margin-bottom: 20px;
+  border-bottom: 0.5px solid #dfdfdf;
 `;
 
 const LibraryIcon = styled.img`
@@ -227,9 +243,9 @@ const LibraryAddress = styled.span`
   font-family: 'SUIT';
   font-style: normal;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 16px;
-  margin-right: 5px;
-
-  color: #868686;
+  color: #545454;
+  text-align: left;
+  margin: 5px 0;
 `;

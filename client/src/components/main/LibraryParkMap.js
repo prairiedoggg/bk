@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const { kakao } = window;
 
-const LibraryParkMap = () => {
+const LibraryParkMap = ({ libraries, searchTerm, onLibraryClick }) => {
+  const [district, setDistrict] = useState('');
+
   useEffect(() => {
     if (!kakao || !kakao.maps) {
       console.error('카카오 맵 로딩 실패');
@@ -37,15 +39,24 @@ const LibraryParkMap = () => {
     );
 
     let markers = [];
-    let infoWindows = [];
 
     const clearMarkers = () => {
       markers.forEach((marker) => marker.setMap(null));
       markers = [];
-      infoWindows = [];
     };
 
     const displayMarkers = (locations, image, type) => {
+      clearMarkers(); // 기존 마커를 지우고 새로운 마커를 표시
+
+      if (locations.length > 0 && type === 'library') {
+        const firstLocation = locations[0];
+        const newCenter = new kakao.maps.LatLng(
+          firstLocation.latitude,
+          firstLocation.longitude
+        );
+        map.setCenter(newCenter);
+      }
+
       locations.forEach((location) => {
         const latitude = location.latitude || 0;
         const longitude = location.longitude || 0;
@@ -53,39 +64,18 @@ const LibraryParkMap = () => {
         const markerPosition = new kakao.maps.LatLng(latitude, longitude);
         const marker = new kakao.maps.Marker({
           position: markerPosition,
-          image: image
-        });
-
-        const infoContent = `
-          <div class="kakao-info-window">
-            <h4>${location.name || '정보 없음'}</h4>
-            <p>주소: ${location.address || '정보 없음'}</p>
-            <p>전화번호: ${location.phone || '정보 없음'}</p>
-            ${
-              type === 'library'
-                ? `
-            <p>운영시간: ${location.hours || '정보 없음'}</p>
-            <p>정기 휴관일: ${location.holidays || '정보 없음'}</p>
-            ${location.url ? `<a href="${location.url}" target="_blank">홈페이지</a>` : ''}
-            `
-                : ''
-            }
-          </div>
-        `;
-
-        const infoWindow = new kakao.maps.InfoWindow({
-          content: infoContent,
-          removable: true
+          image: image,
+          name: location.name // 도서관의 이름 추가
         });
 
         kakao.maps.event.addListener(marker, 'click', () => {
-          infoWindows.forEach((infoWindow) => infoWindow.close());
-          infoWindow.open(map, marker);
+          if (type === 'library') {
+            onLibraryClick(location); // 도서관 마커 클릭 시 콜백 함수 호출
+          }
         });
 
         marker.setMap(map);
         markers.push(marker);
-        infoWindows.push(infoWindow);
       });
     };
 
@@ -129,68 +119,56 @@ const LibraryParkMap = () => {
       fetchAndDisplayData('/api/parks', parkMarkerImage, 'park', filter);
     };
 
-    document
-      .getElementById('district-select')
-      .addEventListener('change', function () {
-        const district = this.value;
-        clearMarkers();
-        fetchAndDisplayLibraries({ district });
-        fetchAndDisplayParks({ district });
-      });
+    fetchAndDisplayLibraries({ district, searchTerm });
+    fetchAndDisplayParks({ district, searchTerm });
+  }, [district, searchTerm, onLibraryClick]);
 
-    document
-      .getElementById('search-button')
-      .addEventListener('click', function () {
-        const searchTerm = document.getElementById('library-search').value;
-        clearMarkers();
-        fetchAndDisplayLibraries({ searchTerm });
-        fetchAndDisplayParks({ searchTerm });
-      });
-
-    fetchAndDisplayLibraries();
-    fetchAndDisplayParks();
-  }, []);
+  const handleDistrictChange = (e) => {
+    setDistrict(e.target.value);
+  };
 
   return (
     <div>
       <div>
         <label htmlFor='district-select'>지역구 선택:</label>
-        <select id='district-select'>
+        <select
+          id='district-select'
+          value={district}
+          onChange={handleDistrictChange}
+        >
           <option value=''>전체</option>
-          <option value='강남구'>강남구</option>
-          <option value='강동구'>강동구</option>
-          <option value='강북구'>강북구</option>
-          <option value='강서구'>강서구</option>
-          <option value='관악구'>관악구</option>
-          <option value='광진구'>광진구</option>
-          <option value='구로구'>구로구</option>
-          <option value='금천구'>금천구</option>
-          <option value='노원구'>노원구</option>
-          <option value='도봉구'>도봉구</option>
-          <option value='동대문구'>동대문구</option>
-          <option value='동작구'>동작구</option>
-          <option value='마포구'>마포구</option>
-          <option value='서대문구'>서대문구</option>
-          <option value='서초구'>서초구</option>
-          <option value='성동구'>성동구</option>
-          <option value='성북구'>성북구</option>
-          <option value='송파구'>송파구</option>
-          <option value='양천구'>양천구</option>
-          <option value='영등포구'>영등포구</option>
-          <option value='용산구'>용산구</option>
-          <option value='은평구'>은평구</option>
-          <option value='종로구'>종로구</option>
-          <option value='중구'>중구</option>
-          <option value='중랑구'>중랑구</option>
+          {[
+            '강남구',
+            '강동구',
+            '강북구',
+            '강서구',
+            '관악구',
+            '광진구',
+            '구로구',
+            '금천구',
+            '노원구',
+            '도봉구',
+            '동대문구',
+            '동작구',
+            '마포구',
+            '서대문구',
+            '서초구',
+            '성동구',
+            '성북구',
+            '송파구',
+            '양천구',
+            '영등포구',
+            '용산구',
+            '은평구',
+            '종로구',
+            '중구',
+            '중랑구'
+          ].map((district, index) => (
+            <option key={index} value={district}>
+              {district}
+            </option>
+          ))}
         </select>
-
-        <label htmlFor='library-search'>이름 검색하기:</label>
-        <input
-          type='text'
-          id='library-search'
-          placeholder='도서관 혹은 공원 이름 입력'
-        />
-        <button id='search-button'>검색</button>
       </div>
       <div id='map' style={{ width: '100%', height: '500px' }}></div>
     </div>
