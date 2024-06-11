@@ -1,9 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const { kakao } = window;
 
-const LibraryParkMap = ({ libraries, searchTerm, onLibraryClick }) => {
-  const [district, setDistrict] = useState('');
+const LibraryParkMap = ({
+  libraries,
+  parks,
+  searchTerm,
+  onLibraryClick,
+  onParkClick,
+  selectedButton
+}) => {
+  const mapRef = useRef(null);
+  const libraryMarkers = useRef([]);
+  const parkMarkers = useRef([]);
 
   useEffect(() => {
     if (!kakao || !kakao.maps) {
@@ -18,6 +27,7 @@ const LibraryParkMap = ({ libraries, searchTerm, onLibraryClick }) => {
     };
 
     const map = new kakao.maps.Map(mapContainer, mapOption);
+    mapRef.current = map;
 
     const libraryImageSrc = '/LocationIcon.svg';
     const libraryImageSize = new kakao.maps.Size(24, 35);
@@ -38,139 +48,81 @@ const LibraryParkMap = ({ libraries, searchTerm, onLibraryClick }) => {
       parkImageOption
     );
 
-    let markers = [];
-
     const clearMarkers = () => {
-      markers.forEach((marker) => marker.setMap(null));
-      markers = [];
+      libraryMarkers.current.forEach((marker) => marker.setMap(null));
+      parkMarkers.current.forEach((marker) => marker.setMap(null));
+      libraryMarkers.current = [];
+      parkMarkers.current = [];
     };
 
-    const displayMarkers = (locations, image, type) => {
-      clearMarkers(); // 기존 마커를 지우고 새로운 마커를 표시
-
-      if (locations.length > 0 && type === 'library') {
-        const firstLocation = locations[0];
-        const newCenter = new kakao.maps.LatLng(
-          firstLocation.latitude,
-          firstLocation.longitude
-        );
-        map.setCenter(newCenter);
-      }
-
+    const displayLibraryMarkers = (locations) => {
+      clearMarkers();
       locations.forEach((location) => {
-        const latitude = location.latitude || 0;
-        const longitude = location.longitude || 0;
-
-        const markerPosition = new kakao.maps.LatLng(latitude, longitude);
+        const markerPosition = new kakao.maps.LatLng(
+          location.latitude,
+          location.longitude
+        );
         const marker = new kakao.maps.Marker({
           position: markerPosition,
-          image: image,
-          name: location.name // 도서관의 이름 추가
+          image: libraryMarkerImage,
+          name: location.name
         });
-
         kakao.maps.event.addListener(marker, 'click', () => {
-          if (type === 'library') {
-            onLibraryClick(location); // 도서관 마커 클릭 시 콜백 함수 호출
-          }
+          onLibraryClick(location);
         });
-
         marker.setMap(map);
-        markers.push(marker);
+        libraryMarkers.current.push(marker);
       });
     };
 
-    const fetchAndDisplayData = (url, image, type, filter = {}) => {
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          if (Array.isArray(data)) {
-            let filteredData = data;
-
-            if (filter.district) {
-              filteredData = filteredData.filter(
-                (item) => item.district === filter.district
-              );
-            }
-
-            if (filter.searchTerm) {
-              filteredData = filteredData.filter(
-                (item) => item.name && item.name.includes(filter.searchTerm)
-              );
-            }
-
-            displayMarkers(filteredData, image, type);
-          } else {
-            console.error('Error: Expected array but got', data);
-          }
-        })
-        .catch((error) => console.error('Error fetching data:', error));
+    const displayParkMarkers = (locations) => {
+      clearMarkers();
+      locations.forEach((location) => {
+        const markerPosition = new kakao.maps.LatLng(
+          location.latitude,
+          location.longitude
+        );
+        const marker = new kakao.maps.Marker({
+          position: markerPosition,
+          image: parkMarkerImage,
+          name: location.name
+        });
+        kakao.maps.event.addListener(marker, 'click', () => {
+          onParkClick(location);
+        });
+        marker.setMap(map);
+        parkMarkers.current.push(marker);
+      });
     };
 
-    const fetchAndDisplayLibraries = (filter = {}) => {
-      fetchAndDisplayData(
-        '/api/libraries',
-        libraryMarkerImage,
-        'library',
-        filter
+    const fetchAndDisplayLibraries = () => {
+      displayLibraryMarkers(
+        libraries.filter((library) => library.name.includes(searchTerm))
       );
     };
 
-    const fetchAndDisplayParks = (filter = {}) => {
-      fetchAndDisplayData('/api/parks', parkMarkerImage, 'park', filter);
+    const fetchAndDisplayParks = () => {
+      displayParkMarkers(
+        parks.filter((park) => park.name.includes(searchTerm))
+      );
     };
 
-    fetchAndDisplayLibraries({ district, searchTerm });
-    fetchAndDisplayParks({ district, searchTerm });
-  }, [district, searchTerm, onLibraryClick]);
+    if (selectedButton === 'library') {
+      fetchAndDisplayLibraries();
+    } else if (selectedButton === 'park') {
+      fetchAndDisplayParks();
+    }
 
-  const handleDistrictChange = (e) => {
-    setDistrict(e.target.value);
-  };
+    return () => {
+      if (mapRef.current) {
+        mapRef.current = null;
+      }
+    };
+  }, [libraries, parks, searchTerm, selectedButton]);
 
   return (
     <div>
-      <div>
-        <label htmlFor='district-select'>지역구 선택:</label>
-        <select
-          id='district-select'
-          value={district}
-          onChange={handleDistrictChange}
-        >
-          <option value=''>전체</option>
-          {[
-            '강남구',
-            '강동구',
-            '강북구',
-            '강서구',
-            '관악구',
-            '광진구',
-            '구로구',
-            '금천구',
-            '노원구',
-            '도봉구',
-            '동대문구',
-            '동작구',
-            '마포구',
-            '서대문구',
-            '서초구',
-            '성동구',
-            '성북구',
-            '송파구',
-            '양천구',
-            '영등포구',
-            '용산구',
-            '은평구',
-            '종로구',
-            '중구',
-            '중랑구'
-          ].map((district, index) => (
-            <option key={index} value={district}>
-              {district}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div id='map' style={{ width: '100%', height: '500px' }}></div>
+      <div id='map' style={{ width: '100%', height: '510px' }}></div>
     </div>
   );
 };

@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import FindLibrary from '../../src/assets/icons/FindLibrary.svg';
-import LibraryPing from '../../src/assets/icons/LibraryPing.svg';
 import LibraryParkMap from '../components/main/LibraryParkMap';
 import DetailModal from '../../src/components/main/DetailModal';
+import LibraryList from '../components/main/LibraryList';
+import ParkList from '../components/main/ParkList';
 
 const Main = () => {
   const [keyword, setKeyword] = useState('');
   const [libraries, setLibraries] = useState([]);
   const [parks, setParks] = useState([]);
   const [selectedLibrary, setSelectedLibrary] = useState(null);
+  const [selectedPark, setSelectedPark] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedButton, setSelectedButton] = useState('library');
 
   useEffect(() => {
     fetch('/api/libraries')
@@ -38,17 +41,28 @@ const Main = () => {
     }
   };
 
-  const filterLibraries = (libraries, keyword) => {
-    return libraries.filter((library) => library.name.includes(keyword));
-  };
-
   const handleLibraryItemClick = (library) => {
     setSelectedLibrary(library);
     setIsModalOpen(true);
   };
 
+  const handleParkItemClick = (park) => {
+    setSelectedPark(park);
+    setIsModalOpen(true);
+  };
+
   const handleMarkerClick = (library) => {
     setSelectedLibrary(library);
+    setIsModalOpen(true);
+  };
+
+  const handleButtonClick = (button) => {
+    setSelectedButton(button);
+    setKeyword(''); // 버튼이 변경될 때 검색어 초기화
+  };
+
+  const handleParkClick = (park) => {
+    setSelectedPark(park);
     setIsModalOpen(true);
   };
 
@@ -76,22 +90,20 @@ const Main = () => {
               </LabelContainer>
             </InputContainer>
 
-            <LibraryListContainer>
-              <LibraryList>
-                {filterLibraries(libraries, keyword).map((library, index) => (
-                  <LibraryListItem
-                    key={index}
-                    onClick={() => handleLibraryItemClick(library)}
-                  >
-                    <LibraryIcon src={LibraryPing} alt='LibraryPing' />
-                    <LibraryInfo>
-                      <LibraryName>{library.name}</LibraryName>
-                      <LibraryAddress>{library.address}</LibraryAddress>
-                    </LibraryInfo>
-                  </LibraryListItem>
-                ))}
-              </LibraryList>
-            </LibraryListContainer>
+            {/* 도서관 버튼이 클릭된 경우 LibraryList 컴포넌트를 렌더링 */}
+            {selectedButton === 'library' ? (
+              <LibraryList
+                libraries={libraries}
+                keyword={keyword}
+                handleLibraryItemClick={handleLibraryItemClick}
+              />
+            ) : (
+              <ParkList
+                parks={parks}
+                keyword={keyword}
+                handleParkItemClick={handleParkItemClick}
+              />
+            )}
           </>
         </Flex>
         <Flex flex={4}>
@@ -101,24 +113,60 @@ const Main = () => {
               parks={parks}
               searchTerm={keyword}
               onLibraryClick={handleMarkerClick}
+              onParkClick={handleParkClick} // 공원 마커 클릭 시 실행될 함수
+              selectedButton={selectedButton} // 공원 버튼 선택 여부 전달
             />
+            <ButtonContainer>
+              <Button
+                onClick={() => handleButtonClick('library')}
+                selected={selectedButton === 'library'}
+              >
+                도서관
+              </Button>
+              <Button
+                onClick={() => handleButtonClick('park')}
+                selected={selectedButton === 'park'}
+              >
+                공원
+              </Button>
+            </ButtonContainer>
           </LibraryParkMapContainer>
         </Flex>
       </Guide>
       <DetailModal
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
-        library={selectedLibrary}
+        place={selectedButton === 'library' ? selectedLibrary : selectedPark}
       />
     </FullHeightContainer>
   );
 };
-
 export default Main;
 
 const LibraryParkMapContainer = styled.div`
   position: relative;
   z-index: 0;
+`;
+
+const ButtonContainer = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+`;
+
+const Button = styled.button`
+  /* Rectangle 29 */
+  background: ${(props) => (props.selected ? '#563C0A' : 'white')};
+  color: ${(props) => (props.selected ? 'white' : '#563C0A')};
+  border: 1px solid #563c0a;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  font-size: 14px;
+  padding: 10px 20px;
+  margin: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
 `;
 
 const FullHeightContainer = styled.div`
@@ -195,57 +243,4 @@ const Label = styled.span`
   line-height: 16px;
 
   color: ${(props) => props.color || '#191619'};
-`;
-
-const LibraryListContainer = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  max-height: 60vh;
-`;
-
-const LibraryList = styled.ul`
-  list-style: none;
-  padding-left: 0.5rem;
-`;
-
-const LibraryListItem = styled.li`
-  display: flex;
-  align-items: center;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  border-bottom: 0.5px solid #dfdfdf;
-`;
-
-const LibraryIcon = styled.img`
-  width: 34px;
-  height: 34px;
-  margin-right: 10px;
-`;
-
-const LibraryInfo = styled.div`
-  display: flex;
-  text-align: left;
-  flex-direction: column;
-`;
-
-const LibraryName = styled.span`
-  font-family: 'SUIT';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 16px;
-  color: #191619;
-  text-align: left;
-  margin: 5px 0;
-`;
-
-const LibraryAddress = styled.span`
-  font-family: 'SUIT';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
-  color: #545454;
-  text-align: left;
-  margin: 5px 0;
 `;
