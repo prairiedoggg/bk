@@ -14,6 +14,7 @@ const Main = () => {
   const [selectedPark, setSelectedPark] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState('library');
+  const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 }); // 지도 중심 상태
 
   useEffect(() => {
     fetch('/api/libraries')
@@ -43,15 +44,15 @@ const Main = () => {
 
   const handleLibraryItemClick = (library) => {
     setSelectedLibrary(library);
-    setIsModalOpen(true);
+    setMapCenter({ lat: library.latitude, lng: library.longitude });
   };
 
   const handleParkItemClick = (park) => {
     setSelectedPark(park);
-    setIsModalOpen(true);
+    setMapCenter({ lat: park.latitude, lng: park.longitude });
   };
 
-  const handleMarkerClick = (library) => {
+  const handleLibraryClick = (library) => {
     setSelectedLibrary(library);
     setIsModalOpen(true);
   };
@@ -112,9 +113,10 @@ const Main = () => {
               libraries={libraries}
               parks={parks}
               searchTerm={keyword}
-              onLibraryClick={handleMarkerClick}
+              onLibraryClick={handleLibraryClick}
               onParkClick={handleParkClick} // 공원 마커 클릭 시 실행될 함수
               selectedButton={selectedButton} // 공원 버튼 선택 여부 전달
+              center={mapCenter} // 지도 중심 좌표 전달
             />
             <ButtonContainer>
               <Button

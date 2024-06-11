@@ -8,7 +8,8 @@ const LibraryParkMap = ({
   searchTerm,
   onLibraryClick,
   onParkClick,
-  selectedButton
+  selectedButton,
+  center
 }) => {
   const mapRef = useRef(null);
   const libraryMarkers = useRef([]);
@@ -119,6 +120,13 @@ const LibraryParkMap = ({
       }
     };
   }, [libraries, parks, searchTerm, selectedButton]);
+
+  useEffect(() => {
+    if (mapRef.current && center) {
+      const newCenter = new kakao.maps.LatLng(center.lat, center.lng);
+      mapRef.current.setCenter(newCenter);
+    }
+  }, [center]);
 
   return (
     <div>
