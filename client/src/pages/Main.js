@@ -6,6 +6,34 @@ import DetailModal from '../../src/components/main/DetailModal';
 import LibraryList from '../components/main/LibraryList';
 import ParkList from '../components/main/ParkList';
 
+const districts = [
+  { name: '강남구', center: { lat: 37.5172, lng: 127.0473 } },
+  { name: '강동구', center: { lat: 37.5301, lng: 127.1237 } },
+  { name: '강북구', center: { lat: 37.6396, lng: 127.0255 } },
+  { name: '강서구', center: { lat: 37.5509, lng: 126.8495 } },
+  { name: '관악구', center: { lat: 37.4784, lng: 126.9516 } },
+  { name: '광진구', center: { lat: 37.5384, lng: 127.0822 } },
+  { name: '구로구', center: { lat: 37.4955, lng: 126.887 } },
+  { name: '금천구', center: { lat: 37.4569, lng: 126.8958 } },
+  { name: '노원구', center: { lat: 37.6543, lng: 127.0568 } },
+  { name: '도봉구', center: { lat: 37.6688, lng: 127.0467 } },
+  { name: '동대문구', center: { lat: 37.5743, lng: 127.0395 } },
+  { name: '동작구', center: { lat: 37.5124, lng: 126.9396 } },
+  { name: '마포구', center: { lat: 37.5663, lng: 126.901 } },
+  { name: '서대문구', center: { lat: 37.5791, lng: 126.9368 } },
+  { name: '서초구', center: { lat: 37.4836, lng: 127.0327 } },
+  { name: '성동구', center: { lat: 37.5634, lng: 127.0366 } },
+  { name: '성북구', center: { lat: 37.5894, lng: 127.0164 } },
+  { name: '송파구', center: { lat: 37.5145, lng: 127.1059 } },
+  { name: '양천구', center: { lat: 37.5169, lng: 126.8666 } },
+  { name: '영등포구', center: { lat: 37.5262, lng: 126.8961 } },
+  { name: '용산구', center: { lat: 37.5324, lng: 126.99 } },
+  { name: '은평구', center: { lat: 37.6028, lng: 126.9293 } },
+  { name: '종로구', center: { lat: 37.572, lng: 126.9794 } },
+  { name: '중구', center: { lat: 37.5633, lng: 126.9978 } },
+  { name: '중랑구', center: { lat: 37.6063, lng: 127.0922 } }
+];
+
 const Main = () => {
   const [keyword, setKeyword] = useState('');
   const [libraries, setLibraries] = useState([]);
@@ -14,7 +42,8 @@ const Main = () => {
   const [selectedPark, setSelectedPark] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState('library');
-  const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 }); // 지도 중심 상태
+  const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 });
+  const [selectedGu, setSelectedGu] = useState('');
 
   useEffect(() => {
     fetch('/api/libraries')
@@ -59,13 +88,30 @@ const Main = () => {
 
   const handleButtonClick = (button) => {
     setSelectedButton(button);
-    setKeyword(''); // 버튼이 변경될 때 검색어 초기화
+    setKeyword('');
   };
 
   const handleParkClick = (park) => {
     setSelectedPark(park);
     setIsModalOpen(true);
   };
+
+  useEffect(() => {
+    const selectedDistrict = districts.find(
+      (district) => district.name === selectedGu
+    );
+    if (selectedDistrict) {
+      setMapCenter(selectedDistrict.center);
+    }
+  }, [selectedGu]);
+
+  const filteredLibraries = libraries.filter(
+    (library) => selectedGu === '' || library.district === selectedGu
+  );
+
+  const filteredParks = parks.filter(
+    (park) => selectedGu === '' || park.district === selectedGu
+  );
 
   return (
     <FullHeightContainer>
@@ -87,20 +133,29 @@ const Main = () => {
               </KeywordInputContainer>
               <LabelContainer>
                 <Label>설정한 위치</Label>
-                <Label style={{ color: '#563C0A' }}>00구</Label>
+                <Select
+                  value={selectedGu}
+                  onChange={(e) => setSelectedGu(e.target.value)}
+                >
+                  <option value=''>전체</option>
+                  {districts.map((gu) => (
+                    <option key={gu.name} value={gu.name}>
+                      {gu.name}
+                    </option>
+                  ))}
+                </Select>
               </LabelContainer>
             </InputContainer>
 
-            {/* 도서관 버튼이 클릭된 경우 LibraryList 컴포넌트를 렌더링 */}
             {selectedButton === 'library' ? (
               <LibraryList
-                libraries={libraries}
+                libraries={filteredLibraries}
                 keyword={keyword}
                 handleLibraryItemClick={handleLibraryItemClick}
               />
             ) : (
               <ParkList
-                parks={parks}
+                parks={filteredParks}
                 keyword={keyword}
                 handleParkItemClick={handleParkItemClick}
               />
@@ -110,13 +165,13 @@ const Main = () => {
         <Flex flex={4}>
           <LibraryParkMapContainer>
             <LibraryParkMap
-              libraries={libraries}
-              parks={parks}
+              libraries={filteredLibraries}
+              parks={filteredParks}
               searchTerm={keyword}
               onLibraryClick={handleLibraryClick}
-              onParkClick={handleParkClick} // 공원 마커 클릭 시 실행될 함수
-              selectedButton={selectedButton} // 공원 버튼 선택 여부 전달
-              center={mapCenter} // 지도 중심 좌표 전달
+              onParkClick={handleParkClick}
+              selectedButton={selectedButton}
+              center={mapCenter}
             />
             <ButtonContainer>
               <Button
@@ -158,7 +213,6 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled.button`
-  /* Rectangle 29 */
   background: ${(props) => (props.selected ? '#563C0A' : 'white')};
   color: ${(props) => (props.selected ? 'white' : '#563C0A')};
   border: 1px solid #563c0a;
@@ -167,7 +221,6 @@ const Button = styled.button`
   font-size: 14px;
   padding: 10px 20px;
   margin: 10px;
-  margin-bottom: 10px;
   cursor: pointer;
 `;
 
@@ -208,7 +261,7 @@ const Input = styled.input`
   height: 1.5rem;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
-  padding: 5px 12px 5px 12px;
+  padding: 5px 12px;
   margin-bottom: 15px;
 
   &::placeholder {
@@ -233,7 +286,9 @@ const FindLibraryIcon = styled.img`
 `;
 
 const LabelContainer = styled.div`
-  margin-top: 10px;
+  display: flex;
+  align-items: center; // 수직 방향 중앙 정렬
+  justify-content: center; // 수평 방향 중앙 정렬
 `;
 
 const Label = styled.span`
@@ -243,6 +298,15 @@ const Label = styled.span`
   font-weight: 400;
   font-size: 15px;
   line-height: 16px;
-
   color: ${(props) => props.color || '#191619'};
+`;
+
+const Select = styled.select`
+  height: 1.6rem;
+  margin-top: 0px;
+  padding: 5px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 11px;
+  font-family: 'SUIT';
 `;

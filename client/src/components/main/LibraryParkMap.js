@@ -24,7 +24,7 @@ const LibraryParkMap = ({
     const mapContainer = document.getElementById('map');
     const mapOption = {
       center: new kakao.maps.LatLng(37.5665, 126.978),
-      level: 4
+      level: 8
     };
 
     const map = new kakao.maps.Map(mapContainer, mapOption);
